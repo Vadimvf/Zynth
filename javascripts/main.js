@@ -400,6 +400,13 @@
 	      var keyId = void 0;
 	      if (e.type === "keyup") {
 	        keyId = this.range[e.keyCode];
+	        if (e.keyCode === 51) {
+	          this.setRange(_constants.OCTAVE.third);
+	        } else if (e.keyCode === 50) {
+	          this.setRange(_constants.OCTAVE.second);
+	        } else if (e.keyCode === 49) {
+	          this.setRange(_constants.OCTAVE.first);
+	        }
 	      } else {
 	        keyId = e.target.id;
 	      }
@@ -413,7 +420,10 @@
 	  }, {
 	    key: 'setRange',
 	    value: function setRange(noteRange) {
+	      this.el.setHTML("");
 	      this.keys = _createKeys(this.el, noteRange);
+	      this.range = noteRange;
+	      this.active = {};
 	    }
 	  }]);
 	
@@ -513,7 +523,7 @@
 	
 	function _createOscillator(freq) {
 	  var osc = ctx.createOscillator();
-	  osc.type = "sine";
+	  osc.type = "square";
 	  osc.frequency.value = freq;
 	  osc.detune.value = 0;
 	  osc.start(ctx.currentTime);

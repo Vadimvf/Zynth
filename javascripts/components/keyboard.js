@@ -50,6 +50,13 @@ class Keyboard {
     let keyId;
     if (e.type === "keyup"){
       keyId = this.range[e.keyCode];
+      if (e.keyCode === 51){
+        this.setRange(OCTAVE.third);
+      } else if (e.keyCode === 50) {
+        this.setRange(OCTAVE.second);
+      } else if (e.keyCode === 49) {
+        this.setRange(OCTAVE.first);
+      }
     }else {
       keyId = e.target.id;
     }
@@ -62,7 +69,10 @@ class Keyboard {
   }
 
   setRange(noteRange){
+    this.el.setHTML("");
     this.keys = _createKeys(this.el, noteRange);
+    this.range = noteRange;
+    this.active = {};
   }
 
 }

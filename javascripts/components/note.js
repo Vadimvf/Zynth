@@ -41,7 +41,7 @@ function _createGainNode (){
 
 function _createOscillator (freq){
   const osc = ctx.createOscillator();
-  osc.type = "sine";
+  osc.type = "square";
   osc.frequency.value = freq;
   osc.detune.value = 0;
   osc.start(ctx.currentTime);
