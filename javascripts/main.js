@@ -365,6 +365,8 @@
 	      el.on('mousedown', 'div.key', this.playNote.bind(this));
 	      el.on('mouseup', 'div.key', this.stopNote.bind(this));
 	      el.on('mouseout', 'div.key', this.stopNote.bind(this));
+	      el.on('touchstart', 'div.key', this.playNote.bind(this));
+	      el.on('touchend', 'div.key', this.stopNote.bind(this));
 	      ctx.on('keydown', this.playNote.bind(this));
 	      ctx.on('keyup', this.stopNote.bind(this));
 	    }
