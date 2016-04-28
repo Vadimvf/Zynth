@@ -53,7 +53,10 @@
 	(0, _domAble.$d)(function () {
 	  var docEl = (0, _domAble.$d)('html');
 	  var keyBoardElement = (0, _domAble.$d)('#keyboard');
-	  var keyboard = new _keyboard.Keyboard(keyBoardElement, docEl);
+	  var keyboard = new _keyboard.Keyboard({
+	    parentEl: keyBoardElement,
+	    docEl: docEl
+	  });
 	  keyboard.setListeners();
 	});
 
@@ -338,14 +341,20 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var Keyboard = function () {
-	  function Keyboard(domAbleElement, domAbleDoc) {
+	  function Keyboard(_ref) {
+	    var parentEl = _ref.parentEl;
+	    var docEl = _ref.docEl;
+	    var _ref$noteRange = _ref.noteRange;
+	    var noteRange = _ref$noteRange === undefined ? _constants.OCTAVE.second : _ref$noteRange;
+	
 	    _classCallCheck(this, Keyboard);
 	
-	    var noteObjs = _createKeys(domAbleElement);
-	    // this.keys = domKeys;
-	    this.notes = noteObjs;
-	    this.el = domAbleElement;
-	    this.ctx = domAbleDoc;
+	    var keys = _createKeys(parentEl, noteRange);
+	    this.keys = keys;
+	    this.range = noteRange;
+	    this.el = parentEl;
+	    this.ctx = docEl;
+	    this.active = {};
 	  }
 	
 	  _createClass(Keyboard, [{
@@ -353,10 +362,11 @@
 	    value: function setListeners() {
 	      var el = this.el;
 	      var ctx = this.ctx;
-	      el.on('mousedown', 'div', this.playNote);
-	      el.on('mouseup', 'div', this.stopNote);
+	      el.on('mousedown', 'div.key', this.playNote.bind(this));
+	      el.on('mouseup', 'div.key', this.stopNote.bind(this));
+	      el.on('mouseout', 'div.key', this.stopNote.bind(this));
 	      ctx.on('keydown', this.playNote.bind(this));
-	      ctx.on('keyup', this.stopNote);
+	      ctx.on('keyup', this.stopNote.bind(this));
 	    }
 	  }, {
 	    key: 'removeListeners',
@@ -369,58 +379,68 @@
 	  }, {
 	    key: 'playNote',
 	    value: function playNote(e) {
-	      // Keyboard.playNote.call(this, e);
-	      console.log(this.notes);
-	      debugger;
-	      // debugger;
-	      // if (e.type === "keydown") _pressRightKey(e);
-	      // $d(e.target).addClass("pressed");
-	      // _findKey(e);
-	      // function _findKey(e){
-	      //     if (e.type === "keydown"){
-	      //
-	      //     }else{
-	      //       console.log("playing " + e.target + " " + e.currentTarget);
-	      //     }
-	      // }
+	      var keyId = void 0;
+	      if (e.type === "keydown") {
+	        keyId = this.range[e.keyCode];
+	      } else {
+	        keyId = e.target.id;
+	      }
+	
+	      if (!keyId) return;
+	      if (this.active[keyId]) return;
+	
+	      this.active[keyId] = true;
+	      var li = (0, _domAble.$d)('div#' + keyId);
+	      li.addClass("pressed");
+	      this.keys[keyId].togglePress();
 	    }
 	  }, {
 	    key: 'stopNote',
 	    value: function stopNote(e) {
-	      // debugger;
-	      console.log("stopped");
-	      (0, _domAble.$d)(e.target).removeClass("pressed");
+	      var keyId = void 0;
+	      if (e.type === "keyup") {
+	        keyId = this.range[e.keyCode];
+	      } else {
+	        keyId = e.target.id;
+	      }
+	      if (!this.active[keyId]) return;
+	
+	      this.active[keyId] = false;
+	      var li = (0, _domAble.$d)('div#' + keyId);
+	      this.keys[keyId].togglePress();
+	      li.removeClass("pressed");
+	    }
+	  }, {
+	    key: 'setRange',
+	    value: function setRange(noteRange) {
+	      this.keys = _createKeys(this.el, noteRange);
 	    }
 	  }]);
 	
 	  return Keyboard;
 	}();
 	
-	function _createKeys(domAbleElement) {
-	  var noteRange = _note.Note.createNoteRange();
+	function _createKeys(domAbleElement, noteRange) {
+	  var keys = _note.Note.createNoteRange(noteRange);
+	  var keyObj = {};
 	
-	  noteRange.forEach(function (note) {
+	  keys.forEach(function (key) {
 	    var li = document.createElement("li");
-	    var name = note.name;
+	    var name = key.name;
 	    var klass = "key";
-	    if (name.includes("s")) klass += " sharp";
-	    var key = (0, _domAble.$d)(li).setHTML('<div class="' + klass + '" id=' + name + '></div>');
 	
-	    domAbleElement.append(key);
+	    keyObj[name] = key;
+	    if (name.includes("s")) {
+	      klass += " sharp";
+	      (0, _domAble.$d)(li).addClass("hidden");
+	    }
+	    var keyEl = (0, _domAble.$d)(li).setHTML('<div class="' + klass + '" id=' + name + '></div>');
+	
+	    domAbleElement.append(keyEl);
 	  });
 	
-	  return noteRange;
+	  return keyObj;
 	};
-	
-	function _pressListener(domAbleElement, keyboard) {
-	  domAbleElement.on('mousedown', 'li', keyboard.playNote(e));
-	  domAbleElement.on('mouseup', 'li', keyboard.stopNote(e));
-	}
-	
-	function _keyListener(domAbleDoc) {
-	  domAbleDoc.on('keyup', this.playNote(e));
-	  domAbleDoc.on('keydown', this.stopNote(e));
-	}
 	
 	exports.Keyboard = Keyboard;
 
@@ -467,9 +487,7 @@
 	    }
 	  }], [{
 	    key: "createNoteRange",
-	    value: function createNoteRange() {
-	      var noteRange = arguments.length <= 0 || arguments[0] === undefined ? _constants.OCTAVE.second : arguments[0];
-	
+	    value: function createNoteRange(noteRange) {
 	      var range = Object.keys(noteRange).map(function (key) {
 	        var noteName = noteRange[key];
 	        return new Note(noteName);
@@ -513,15 +531,10 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	
-	var _NOTES_HIGH;
-	
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-	
 	var NOTES_LOW = {
 	  65: 'aaC2',
 	  87: 'aaC2s',
-	  82: 'aaD2',
+	  83: 'aaD2',
 	  69: 'aaD2s',
 	  68: 'aaE2',
 	  70: 'aaF2',
@@ -558,14 +571,25 @@
 	  186: 'bE4'
 	};
 	
-	var NOTES_HIGH = (_NOTES_HIGH = {
+	var NOTES_HIGH = {
 	  65: 'bC4',
 	  87: 'bC4s',
-	  84: 'bD4',
+	  83: 'bD4',
 	  69: 'bD4s',
 	  68: 'bE4',
-	  70: 'bF4'
-	}, _defineProperty(_NOTES_HIGH, '84', 'bF4s'), _defineProperty(_NOTES_HIGH, 71, 'bG4'), _defineProperty(_NOTES_HIGH, 89, 'bG4s'), _defineProperty(_NOTES_HIGH, 72, 'bH4'), _defineProperty(_NOTES_HIGH, 85, 'bH4s'), _defineProperty(_NOTES_HIGH, 74, 'bI4'), _defineProperty(_NOTES_HIGH, 75, 'cC5'), _defineProperty(_NOTES_HIGH, 79, 'cC5s'), _defineProperty(_NOTES_HIGH, 76, 'cD5'), _defineProperty(_NOTES_HIGH, 80, 'cD5s'), _defineProperty(_NOTES_HIGH, 186, 'cE5'), _NOTES_HIGH);
+	  70: 'bF4',
+	  84: 'bF4s',
+	  71: 'bG4',
+	  89: 'bG4s',
+	  72: 'bH4',
+	  85: 'bH4s',
+	  74: 'bI4',
+	  75: 'cC5',
+	  79: 'cC5s',
+	  76: 'cD5',
+	  80: 'cD5s',
+	  186: 'cE5'
+	};
 	
 	var OCTAVE = {
 	  first: NOTES_LOW,
@@ -604,66 +628,66 @@
 	};
 	
 	var TONES = {
-	  aaC2: 16.35 * 4,
-	  aaC2s: 17.32 * 4,
-	  aaD2: 18.35 * 4,
-	  aaD2s: 19.45 * 4,
-	  aaE2: 20.60 * 4,
-	  aaF2: 21.83 * 4,
-	  aaF2s: 23.12 * 4,
-	  aaG2: 24.50 * 4,
-	  aaG2s: 25.96 * 4,
-	  aaH2: 27.50 * 4,
-	  aaH2s: 29.14 * 4,
-	  aaI2: 30.87 * 4,
-	  aC3: 16.35 * 8,
-	  aC3s: 17.32 * 8,
-	  aD3: 18.35 * 8,
-	  aD3s: 19.45 * 8,
-	  aE3: 20.60 * 8,
-	  aF3: 21.83 * 8,
-	  aF3s: 23.12 * 8,
-	  aG3: 24.50 * 8,
-	  aG3s: 25.96 * 8,
-	  aH3: 27.50 * 8,
-	  aH3s: 29.14 * 8,
-	  aI3: 30.87 * 8,
-	  bC4: 16.35 * 16,
-	  bC4s: 17.32 * 16,
-	  bD4: 18.35 * 16,
-	  bD4s: 19.45 * 16,
-	  bE4: 20.60 * 16,
-	  bF4: 21.83 * 16,
-	  bF4s: 23.12 * 16,
-	  bG4: 24.50 * 16,
-	  bG4s: 25.96 * 16,
-	  bH4: 27.50 * 16,
-	  bH4s: 29.14 * 16,
-	  bI4: 30.87 * 16,
-	  cC5: 16.35 * 32,
-	  cC5s: 17.32 * 32,
-	  cD5: 18.35 * 32,
-	  cD5s: 19.45 * 32,
-	  cE5: 20.60 * 32,
-	  F5: 21.83 * 32,
-	  F5s: 23.12 * 32,
-	  G5: 24.50 * 32,
-	  G5s: 25.96 * 32,
-	  H5: 27.50 * 32,
-	  H5s: 29.14 * 32,
-	  I5: 30.87 * 32,
-	  C6: 16.35 * 64,
-	  C6s: 17.32 * 64,
-	  D6: 18.35 * 64,
-	  D6s: 19.45 * 64,
-	  E6: 20.60 * 64,
-	  F6: 21.83 * 64,
-	  F6s: 23.12 * 64,
-	  G6: 24.50 * 64,
-	  G6s: 25.96 * 64,
-	  H6: 27.50 * 64,
-	  H6s: 29.14 * 64,
-	  I6: 30.87 * 64
+	  aaC2: 65.41,
+	  aaC2s: 69.3,
+	  aaD2: 73.42,
+	  aaD2s: 77.78,
+	  aaE2: 82.41,
+	  aaF2: 87.31,
+	  aaF2s: 92.5,
+	  aaG2: 98,
+	  aaG2s: 103.83,
+	  aaH2: 110,
+	  aaH2s: 116.54,
+	  aaI2: 123.47,
+	  aC3: 130.81,
+	  aC3s: 138.59,
+	  aD3: 146.83,
+	  aD3s: 155.56,
+	  aE3: 164.81,
+	  aF3: 174.61,
+	  aF3s: 185,
+	  aG3: 196,
+	  aG3s: 207.65,
+	  aH3: 220,
+	  aH3s: 233.08,
+	  aI3: 246.94,
+	  bC4: 261.63,
+	  bC4s: 277.18,
+	  bD4: 293.66,
+	  bD4s: 311.13,
+	  bE4: 329.63,
+	  bF4: 349.23,
+	  bF4s: 369.99,
+	  bG4: 392,
+	  bG4s: 415.3,
+	  bH4: 440,
+	  bH4s: 466.16,
+	  bI4: 493.88,
+	  cC5: 523.25,
+	  cC5s: 554.37,
+	  cD5: 587.33,
+	  cD5s: 622.25,
+	  cE5: 659.25,
+	  F5: 698.46,
+	  F5s: 739.99,
+	  G5: 783.99,
+	  G5s: 830.61,
+	  H5: 880,
+	  H5s: 932.33,
+	  I5: 987.77,
+	  C6: 1046.5,
+	  C6s: 1108.73,
+	  D6: 1174.66,
+	  D6s: 1244.51,
+	  E6: 1318.51,
+	  F6: 1396.91,
+	  F6s: 1479.98,
+	  G6: 1567.98,
+	  G6s: 1661.22,
+	  H6: 1760,
+	  H6s: 1864.66,
+	  I6: 1975.53
 	};
 	
 	exports.KEY_MAP = KEY_MAP;

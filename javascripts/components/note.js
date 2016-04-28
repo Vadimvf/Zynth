@@ -12,7 +12,7 @@ class Note {
     this.isPressed = false;
   }
 
-  static createNoteRange(noteRange=OCTAVE.second){
+  static createNoteRange(noteRange){
     let range = Object.keys(noteRange).map( key => {
       let noteName = noteRange[key];
       return new Note(noteName);
@@ -36,7 +36,7 @@ function _createGainNode (){
   const gainNode = ctx.createGain();
   gainNode.gain.value = 0;
   gainNode.connect(ctx.destination);
-  return gainNode; 
+  return gainNode;
 };
 
 function _createOscillator (freq){

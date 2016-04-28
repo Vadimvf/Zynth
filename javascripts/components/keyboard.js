@@ -3,21 +3,23 @@ import { $d } from './domAble';
 import { KEY_MAP, TONES, OCTAVE } from './constants';
 
 class Keyboard {
-  constructor(domAbleElement, domAbleDoc){
-    let noteObjs = _createKeys(domAbleElement);
-    // this.keys = domKeys;
-    this.notes = noteObjs;
-    this.el = domAbleElement;
-    this.ctx = domAbleDoc;
+  constructor({parentEl, docEl, noteRange=OCTAVE.second}){
+    let keys = _createKeys(parentEl, noteRange);
+    this.keys = keys;
+    this.range = noteRange;
+    this.el = parentEl;
+    this.ctx = docEl;
+    this.active = {};
   }
 
   setListeners(){
     let el = this.el;
     let ctx = this.ctx;
-    el.on('mousedown', 'div', this.playNote);
-    el.on('mouseup', 'div', this.stopNote);
+    el.on('mousedown', 'div.key', this.playNote.bind(this));
+    el.on('mouseup', 'div.key', this.stopNote.bind(this));
+    el.on('mouseout', 'div.key', this.stopNote.bind(this));
     ctx.on('keydown', this.playNote.bind(this));
-    ctx.on('keyup', this.stopNote);
+    ctx.on('keyup', this.stopNote.bind(this));
   }
 
   removeListeners(){
@@ -28,54 +30,64 @@ class Keyboard {
   }
 
   playNote(e){
-    // Keyboard.playNote.call(this, e);
-    console.log(this.notes);
-    debugger;
-    // debugger;
-    // if (e.type === "keydown") _pressRightKey(e);
-    // $d(e.target).addClass("pressed");
-    // _findKey(e);
-    // function _findKey(e){
-    //     if (e.type === "keydown"){
-    //
-    //     }else{
-    //       console.log("playing " + e.target + " " + e.currentTarget);
-    //     }
-    // }
+    let keyId;
+    if (e.type === "keydown"){
+      keyId = this.range[e.keyCode];
+    }else {
+      keyId = e.target.id;
+    }
+
+    if (!keyId) return;
+    if (this.active[keyId]) return;
+
+    this.active[keyId] = true;
+    let li = $d(`div#${keyId}`);
+    li.addClass("pressed");
+    this.keys[keyId].togglePress();
   }
 
   stopNote(e){
-    // debugger;
-    console.log("stopped");
-    $d(e.target).removeClass("pressed");
+    let keyId;
+    if (e.type === "keyup"){
+      keyId = this.range[e.keyCode];
+    }else {
+      keyId = e.target.id;
+    }
+    if (!this.active[keyId]) return;
+
+    this.active[keyId] = false;
+    let li = $d(`div#${keyId}`);
+    this.keys[keyId].togglePress();
+    li.removeClass("pressed");
+  }
+
+  setRange(noteRange){
+    this.keys = _createKeys(this.el, noteRange);
   }
 
 }
 
-function _createKeys(domAbleElement){
-  const noteRange = Note.createNoteRange();
+function _createKeys(domAbleElement, noteRange){
+  const keys = Note.createNoteRange(noteRange);
+  let keyObj = {};
 
-  noteRange.forEach( note => {
+  keys.forEach( key => {
     let li = document.createElement("li");
-    let name = note.name;
+    let name = key.name;
     let klass = "key";
-    if (name.includes("s")) klass += " sharp";
-    let key = $d(li).setHTML(`<div class="${klass}" id=${name}></div>`);
 
-    domAbleElement.append(key);
+    keyObj[name] = key;
+    if (name.includes("s")) {
+      klass += " sharp";
+      $d(li).addClass("hidden");
+    }
+    let keyEl = $d(li).setHTML(`<div class="${klass}" id=${name}></div>`);
+
+    domAbleElement.append(keyEl);
   });
 
-  return noteRange;
+  return keyObj;
 };
 
-function _pressListener(domAbleElement, keyboard){
-  domAbleElement.on('mousedown', 'li', keyboard.playNote(e));
-  domAbleElement.on('mouseup', 'li', keyboard.stopNote(e));
-}
-
-function _keyListener(domAbleDoc){
-  domAbleDoc.on('keyup', this.playNote(e));
-  domAbleDoc.on('keydown', this.stopNote(e));
-}
 
 export { Keyboard };

@@ -1,3 +1,22 @@
+/*RESET*/
+body, ul, li, div {
+  border: none;
+  text-decoration: none;
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  box-sizing: border-box;
+  height: auto;
+  font-size: inherit;
+}
+
+HTML, body {
+  height: 100%;
+  min-height: 100%;
+  font-size: 100%;
+}
+
+
 .group:after {
   content: "";
   display: block;
@@ -8,13 +27,14 @@ li {
   list-style: none;
   position: relative;
   float: left;
+  width: 10%;
+  height: 90%;
 }
 
 li > div {
   background-color: white;
-  height: 240px;
-  width: 70px;
-  border: 1px solid black;
+  height: 100%;
+  border: 1px solid rgb(166, 166, 166);
   text-align: center;
   box-sizing: border-box;
   border-bottom-left-radius: 10px;
@@ -24,24 +44,106 @@ li > div {
 .sharp {
   position: absolute;
   z-index: 1;
-  border-left: 2px solid black;
-  border-right: 2px solid black;
-  width: 50px;
-  background-color: black;
-  height: 150px;
+  border-left: 2px solid rgb(56, 56, 56);
+  border-right: 2px solid rgb(56, 56, 56);
+  width: 6rem;
+  background-color: rgb(56, 56, 56);
+  height: 60%;
   color: white;
-  margin-left: -25px
+  margin-left: -3rem;
+  background-image: none;
 }
 
 .pressed {
-  background-color: #F6D762;
+  background-color: #f5da69;
+  border: 5px solid #1c6891;
 }
 
+.hidden {
+  width: 0;
+}
+
+
 #keyboard {
-  border: 1px solid black;
-  width: 700px;
+  width: 100%;
+  height: 100%;
   display: block;
-  padding: 20px;
-  background-color: #007dc1;
+  padding: 2%;
   border-radius: 5px;
+  background-image: url('./stardust.png');
+}
+
+
+@media screen and (max-width: 1200px) {
+    .sharp {
+        width: 5rem;
+        margin-left: -2.5rem;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .sharp {
+        width: 4rem;
+        margin-left: -2rem;
+    }
+}
+
+@media screen and (max-width: 750px) {
+  li {
+    list-style: none;
+    position: relative;
+    float: none;
+    width: 90%;
+    height: 10%;
+  }
+
+  li > div {
+    background-color: white;
+    height: 100%;
+    border: 1px solid rgb(166, 166, 166);
+    text-align: center;
+    box-sizing: border-box;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 0px;
+  }
+
+  .sharp {
+    position: absolute;
+    z-index: 1;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    height: 4rem;
+    background-color: black;
+    width: 16rem;
+    color: white;
+    margin-top: -2rem;
+    margin-left: 0;
+  }
+
+  .hidden {
+    width: 0;
+    height: 0;
+  }
+}
+
+@media screen and (max-width: 750px) and (max-height: 750px){
+  .sharp {
+    height: 3rem;
+    margin-top: -1.5rem;
+  }
+}
+
+@media screen and (max-width: 750px) and (max-height: 550px){
+  .sharp {
+    height: 2rem;
+    margin-top: -1rem;
+  }
+}
+
+@media screen and (max-width: 750px) and (max-height: 550px){
+  .sharp {
+    height: 1rem;
+    margin-top: -.5rem;
+  }
 }
