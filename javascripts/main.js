@@ -409,7 +409,7 @@
 	        } else if (e.keyCode === 49) {
 	          this.setRange(_constants.OCTAVE.first);
 	        }
-	      } else {
+	      } else if (e.type === "touchstart") {} else {
 	        keyId = e.target.id;
 	      }
 	      if (!this.active[keyId]) return;
@@ -505,7 +505,7 @@
 	        return new Note(noteName);
 	      });
 	      range = range.sort(function (a, b) {
-	        return a.freq - b.freq;
+	        return b.freq - a.freq;
 	      });
 	      return range;
 	    }
