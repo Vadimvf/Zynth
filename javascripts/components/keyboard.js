@@ -59,6 +59,8 @@ class Keyboard {
       } else if (e.keyCode === 49) {
         this.setRange(OCTAVE.first);
       }
+    }else if (e.type === "touchstart"){
+      
     }else {
       keyId = e.target.id;
     }

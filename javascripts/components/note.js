@@ -17,7 +17,7 @@ class Note {
       let noteName = noteRange[key];
       return new Note(noteName);
     });
-    range = range.sort((a, b) => a.freq -b.freq );
+    range = range.sort((a, b) => b.freq - a.freq );
     return range;
   }
 
