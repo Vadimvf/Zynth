@@ -165,6 +165,7 @@ class DOMNodeCollection {
     }
 
     this.each (el => el.addEventListener(eventType, delegatedListener));
+    return delegatedListener;
   }
 
   off(eventType, listener) {

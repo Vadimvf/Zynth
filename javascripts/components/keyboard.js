@@ -10,32 +10,32 @@ class Keyboard {
     this.el = parentEl;
     this.ctx = docEl;
     this.active = {};
+    this.slideListener = null;
   }
 
   setListeners(){
+    debugger;
     let el = this.el;
     let ctx = this.ctx;
     el.on('mousedown', 'div.key', this.playNote.bind(this));
-    el.on('mouseup', 'div.key', this.stopNote.bind(this));
     el.on('mouseout', 'div.key', this.stopNote.bind(this));
+    ctx.on('mouseup', this.stopNote.bind(this));
+
     el.on('touchstart', 'div.key', this.playNote.bind(this));
     el.on('touchend', 'div.key', this.stopNote.bind(this));
+
     ctx.on('keydown', this.playNote.bind(this));
     ctx.on('keyup', this.stopNote.bind(this));
-  }
-
-  removeListeners(){
-    el.off('mousedown', 'div', this.playNote);
-    el.off('mouseup', 'div', this.stopNote);
-    ctx.off('keydown', this.playNote);
-    ctx.off('keyup', this.stopNote);
   }
 
   playNote(e){
     let keyId;
     if (e.type === "keydown"){
       keyId = this.range[e.keyCode];
-    }else {
+    } else if (e.type === "mousedown"){
+      this.slideListener = this.el.on('mouseover', 'div.key', this.playNote.bind(this));
+      keyId = e.target.id;
+    } else {
       keyId = e.target.id;
     }
 
@@ -59,9 +59,11 @@ class Keyboard {
       } else if (e.keyCode === 49) {
         this.setRange(OCTAVE.first);
       }
-    }else if (e.type === "touchstart"){
-      
-    }else {
+    } else if (e.type === "mouseup"){
+      this.el.off('mouseover', this.slideListener);
+      this.slideListener = null;
+      keyId = e.target.id;
+    } else {
       keyId = e.target.id;
     }
     if (!this.active[keyId]) return;
