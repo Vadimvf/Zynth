@@ -50,6 +50,8 @@
 	
 	var _keyboard = __webpack_require__(2);
 	
+	var _controls = __webpack_require__(5);
+	
 	(0, _domAble.$d)(function () {
 	  var docEl = (0, _domAble.$d)('html');
 	  var keyBoardElement = (0, _domAble.$d)('#keyboard');
@@ -58,6 +60,8 @@
 	    docEl: docEl
 	  });
 	  keyboard.setListeners();
+	  var controller = new _controls.Controller(keyboard);
+	  window.controller = controller;
 	});
 
 /***/ },
@@ -350,7 +354,7 @@
 	
 	    _classCallCheck(this, Keyboard);
 	
-	    var keys = _createKeys(parentEl, noteRange);
+	    var keys = _createKeys(parentEl, noteRange, {});
 	    this.keys = keys;
 	    this.range = noteRange;
 	    this.el = parentEl;
@@ -362,7 +366,6 @@
 	  _createClass(Keyboard, [{
 	    key: 'setListeners',
 	    value: function setListeners() {
-	      debugger;
 	      var el = this.el;
 	      var ctx = this.ctx;
 	      el.on('mousedown', 'div.key', this.playNote.bind(this));
@@ -379,6 +382,7 @@
 	    key: 'playNote',
 	    value: function playNote(e) {
 	      var keyId = void 0;
+	      e.preventDefault();
 	      if (e.type === "keydown") {
 	        keyId = this.range[e.keyCode];
 	      } else if (e.type === "mousedown") {
@@ -402,13 +406,6 @@
 	      var keyId = void 0;
 	      if (e.type === "keyup") {
 	        keyId = this.range[e.keyCode];
-	        if (e.keyCode === 51) {
-	          this.setRange(_constants.OCTAVE.third);
-	        } else if (e.keyCode === 50) {
-	          this.setRange(_constants.OCTAVE.second);
-	        } else if (e.keyCode === 49) {
-	          this.setRange(_constants.OCTAVE.first);
-	        }
 	      } else if (e.type === "mouseup") {
 	        this.el.off('mouseover', this.slideListener);
 	        this.slideListener = null;
@@ -425,9 +422,9 @@
 	    }
 	  }, {
 	    key: 'setRange',
-	    value: function setRange(noteRange) {
+	    value: function setRange(noteRange, paramObj) {
 	      this.el.setHTML("");
-	      this.keys = _createKeys(this.el, noteRange);
+	      this.keys = _createKeys(this.el, noteRange, paramObj);
 	      this.range = noteRange;
 	      this.active = {};
 	    }
@@ -436,8 +433,8 @@
 	  return Keyboard;
 	}();
 	
-	function _createKeys(domAbleElement, noteRange) {
-	  var keys = _note.Note.createNoteRange(noteRange);
+	function _createKeys(domAbleElement, noteRange, paramObj) {
+	  var keys = _note.Note.createNoteRange(noteRange, paramObj);
 	  var keyObj = {};
 	
 	  keys.forEach(function (key) {
@@ -469,7 +466,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.Note = undefined;
+	exports.ctx = exports.Note = undefined;
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
@@ -480,14 +477,22 @@
 	var ctx = new (window.AudioContext || window.webkitAudioContext)();
 	
 	var Note = function () {
-	  function Note(noteName) {
+	  function Note(noteName, _ref) {
+	    var _ref$oscType = _ref.oscType1;
+	    var oscType1 = _ref$oscType === undefined ? "sine" : _ref$oscType;
+	    var _ref$oscType2 = _ref.oscType2;
+	    var oscType2 = _ref$oscType2 === undefined ? "sine" : _ref$oscType2;
+	
 	    _classCallCheck(this, Note);
 	
 	    this.name = noteName;
 	    this.freq = _constants.TONES[noteName];
-	    this.oscillatorNode = _createOscillator(this.freq);
-	    this.gainNode = _createGainNode();
-	    this.oscillatorNode.connect(this.gainNode);
+	    this.oscillatorNode1 = _createOscillator(this.freq, oscType1);
+	    this.oscillatorNode2 = _createOscillator(this.freq, oscType2);
+	    this.gainNode1 = _createGainNode();
+	    this.gainNode2 = _createGainNode();
+	    this.oscillatorNode1.connect(this.gainNode1);
+	    this.oscillatorNode2.connect(this.gainNode2);
 	    this.isPressed = false;
 	  }
 	
@@ -496,17 +501,19 @@
 	    value: function togglePress() {
 	      this.isPressed = !this.isPressed;
 	      if (this.isPressed) {
-	        this.gainNode.gain.value = 0.3;
+	        this.gainNode1.gain.value = 0.3;
+	        this.gainNode2.gain.value = 0.3;
 	      } else {
-	        this.gainNode.gain.value = 0;
+	        this.gainNode1.gain.value = 0;
+	        this.gainNode2.gain.value = 0;
 	      }
 	    }
 	  }], [{
 	    key: "createNoteRange",
-	    value: function createNoteRange(noteRange) {
+	    value: function createNoteRange(noteRange, paramsObj) {
 	      var range = Object.keys(noteRange).map(function (key) {
 	        var noteName = noteRange[key];
-	        return new Note(noteName);
+	        return new Note(noteName, paramsObj);
 	      });
 	      range = range.sort(function (a, b) {
 	        return b.freq - a.freq;
@@ -527,9 +534,9 @@
 	  return gainNode;
 	};
 	
-	function _createOscillator(freq) {
+	function _createOscillator(freq, type) {
 	  var osc = ctx.createOscillator();
-	  osc.type = "square";
+	  osc.type = type;
 	  osc.frequency.value = freq;
 	  osc.detune.value = 0;
 	  osc.start(ctx.currentTime);
@@ -537,6 +544,7 @@
 	};
 	
 	exports.Note = Note;
+	exports.ctx = ctx;
 
 /***/ },
 /* 4 */
@@ -709,6 +717,96 @@
 	exports.KEY_MAP = KEY_MAP;
 	exports.TONES = TONES;
 	exports.OCTAVE = OCTAVE;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.Controller = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _constants = __webpack_require__(4);
+	
+	var _note = __webpack_require__(3);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var AudioContext = _note.ctx;
+	
+	var Controller = function () {
+	  function Controller(keyboardObj) {
+	    _classCallCheck(this, Controller);
+	
+	    this.keyboard = keyboardObj;
+	    this.notes = keyboardObj.keys;
+	    this.settings = {
+	      oscType1: "sine",
+	      oscType2: "sine"
+	    };
+	    this.oscType1 = "sine";
+	    this.oscType2 = "sine";
+	  }
+	
+	  _createClass(Controller, [{
+	    key: 'setRange',
+	    value: function setRange(rangeId) {
+	      var range = void 0;
+	      if (rangeId === 1) {
+	        range = _constants.OCTAVE.first;
+	      } else if (rangeId === 2) {
+	        range = _constants.OCTAVE.second;
+	      } else {
+	        range = _constants.OCTAVE.third;
+	      }
+	      var noteNames = [];
+	      this.keyboard.setRange(range, this.settings);
+	      this.notes = this.keyboard.keys;
+	    }
+	  }, {
+	    key: 'detune',
+	    value: function detune(value) {
+	      this.eachNote(function (note) {
+	        return note.oscillatorNode1.detune.value = value;
+	      });
+	    }
+	  }, {
+	    key: 'setWaveTypeOsc1',
+	    value: function setWaveTypeOsc1(type) {
+	      this.eachNote(function (note) {
+	        return note.oscillatorNode1.type = type;
+	      });
+	      this.settings.oscType1 = type;
+	    }
+	  }, {
+	    key: 'setWaveTypeOsc2',
+	    value: function setWaveTypeOsc2(type) {
+	      this.eachNote(function (note) {
+	        return note.oscillatorNode2.type = type;
+	      });
+	      this.settings.oscType2 = type;
+	    }
+	  }, {
+	    key: 'eachNote',
+	    value: function eachNote(callback) {
+	      var keys = Object.keys(this.notes);
+	      for (var i = 0; i < keys.length; i++) {
+	        callback(this.notes[keys[i]], i);
+	      }
+	
+	      return this.keys;
+	    }
+	  }]);
+	
+	  return Controller;
+	}();
+	
+	exports.Controller = Controller;
 
 /***/ }
 /******/ ]);
