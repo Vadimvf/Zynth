@@ -1,10 +1,10 @@
 import { Note } from './note';
 import { $d } from './domAble';
-import { KEY_MAP, TONES, OCTAVE } from './constants';
+import { KEY_MAP, TONES, OCTAVE, DEFAULT } from './constants';
 
 class Keyboard {
   constructor({parentEl, docEl, noteRange=OCTAVE.second}){
-    let keys = _createKeys(parentEl, noteRange);
+    let keys = _createKeys(parentEl, noteRange, {});
     this.keys = keys;
     this.range = noteRange;
     this.el = parentEl;
@@ -14,7 +14,6 @@ class Keyboard {
   }
 
   setListeners(){
-    debugger;
     let el = this.el;
     let ctx = this.ctx;
     el.on('mousedown', 'div.key', this.playNote.bind(this));
@@ -30,6 +29,7 @@ class Keyboard {
 
   playNote(e){
     let keyId;
+    e.preventDefault();
     if (e.type === "keydown"){
       keyId = this.range[e.keyCode];
     } else if (e.type === "mousedown"){
@@ -52,13 +52,6 @@ class Keyboard {
     let keyId;
     if (e.type === "keyup"){
       keyId = this.range[e.keyCode];
-      if (e.keyCode === 51){
-        this.setRange(OCTAVE.third);
-      } else if (e.keyCode === 50) {
-        this.setRange(OCTAVE.second);
-      } else if (e.keyCode === 49) {
-        this.setRange(OCTAVE.first);
-      }
     } else if (e.type === "mouseup"){
       this.el.off('mouseover', this.slideListener);
       this.slideListener = null;
@@ -74,17 +67,17 @@ class Keyboard {
     li.removeClass("pressed");
   }
 
-  setRange(noteRange){
+  setRange(noteRange, paramObj){
     this.el.setHTML("");
-    this.keys = _createKeys(this.el, noteRange);
+    this.keys = _createKeys(this.el, noteRange, paramObj);
     this.range = noteRange;
     this.active = {};
   }
 
 }
 
-function _createKeys(domAbleElement, noteRange){
-  const keys = Note.createNoteRange(noteRange);
+function _createKeys(domAbleElement, noteRange, paramObj){
+  const keys = Note.createNoteRange(noteRange, paramObj);
   let keyObj = {};
 
   keys.forEach( key => {
