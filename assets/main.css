@@ -63,6 +63,19 @@ li > div {
   width: 0;
 }
 
+.control {
+  width: 16.666666%;
+  border: 1px solid red;
+  height: 100%;
+}
+
+#controller > ul {
+  height: 100%;
+}
+
+#controller {
+  height: 15%;
+}
 
 #keyboard {
   width: 100%;
