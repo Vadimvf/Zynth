@@ -1,6 +1,7 @@
 import { $d } from './components/domAble';
 import { Keyboard } from './components/keyboard';
 import { Controller } from './components/controls';
+import { Tuna } from './tuna-master/tuna';
 
 $d(function(){
   const docEl = $d('html');
