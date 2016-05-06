@@ -10,15 +10,63 @@
   <body>
     <div class="group" id="keyboard">
       <div class="group" id="controller">
-        <ul>
-          <li class="control" id="range"></li>
-          <li class="control" id="chorus"></li>
-          <li class="control" id="delay"></li>
-          <li class="control" id="phaser"></li>
-          <li class="control" id="bitcrusher"></li>
-          <li class="control" id="overdrive"></li>
+        <ul class="controls upper">
+          <li class="osc1" id="sawtooth">
+            <p>ᔭ</p>
+          </li>
+          <li class="osc1 selected" id="sine">
+            <p>∿</p>
+          </li>
+          <li class="osc1" id="square">
+            <p>■</p>
+          </li>
+          <li class="osc1" id="triangle">
+            <p>△</p>
+          </li>
+          <li class="osc2" id="sawtooth">
+            <p>ᔭ</p>
+          </li>
+          <li class="osc2 selected" id="sine">
+            <p>∿</p>
+          </li>
+          <li class="osc2" id="square">
+            <p>■</p>
+          </li>
+          <li class="osc2" id="triangle">
+            <p>△</p>
+          </li>
+        </ul>
+        <ul class="controls lower">
+          <li class="range" id="1">
+            <p>C2</p>
+          </li>
+          <li class="range selected" id="2">
+            <p>C3</p>
+          </li>
+          <li class="range" id="3">
+            <p>C4</p>
+          </li>
+          <li class="effect" id="chorus">
+            <p>CHORUS</p>
+          </li>
+          <li class="effect" id="delay">
+            <p>DELAY</p>
+          </li>
+          <li class="effect" id="phaser">
+            <p>PHASER</p>
+          </li>
+          <li class="effect" id="bitcrusher">
+            <p>BITCRUSH</p>
+          </li>
+          <li class="effect" id="overdrive">
+            <p>DRIVE</p>
+          </li>
+          <li class="effect" id="tremolo">
+            <p>TREMELO</p>
+          </li>
         </ul>
       </div>
+      <div id="keys"></div>
     </div>
   </body>
 </html>

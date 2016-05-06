@@ -1,6 +1,7 @@
 import { Note } from './note';
 import { $d } from './domAble';
 import { KEY_MAP, TONES, OCTAVE, DEFAULT } from './constants';
+import { Controller } from './controls';
 
 class Keyboard {
   constructor({parentEl, docEl, noteRange=OCTAVE.second}){
@@ -68,6 +69,9 @@ class Keyboard {
   }
 
   setRange(noteRange, paramObj){
+    for (let note in this.active) {
+      this.keys[note].gainNode1.gain.value = 0;
+    }
     this.el.setHTML("");
     this.keys = _createKeys(this.el, noteRange, paramObj);
     this.range = noteRange;
@@ -79,12 +83,10 @@ class Keyboard {
 function _createKeys(domAbleElement, noteRange, paramObj){
   const keys = Note.createNoteRange(noteRange, paramObj);
   let keyObj = {};
-
   keys.forEach( key => {
     let li = document.createElement("li");
     let name = key.name;
     let klass = "key";
-
     keyObj[name] = key;
     if (name.includes("s")) {
       klass += " sharp";

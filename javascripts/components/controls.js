@@ -8,7 +8,6 @@ const tuna = new Tuna (ctx);
 class Controller {
   constructor(keyboardObj) {
     let controls = _createControls();
-    this.controls = controls;
     this.keyboard = keyboardObj;
     this.notes = keyboardObj.keys;
     this.settings = {
@@ -18,13 +17,14 @@ class Controller {
     this.oscType1 = "sine";
     this.oscType2 = "sine";
     this.setEffects();
+    this.setListeners();
   }
 
   setRange(rangeId){
     let range;
-    if (rangeId === 1){
+    if (rangeId === "1"){
       range = OCTAVE.first;
-    } else if (rangeId === 2){
+    } else if (rangeId === "2"){
       range = OCTAVE.second;
     } else {
       range = OCTAVE.third;
@@ -32,7 +32,6 @@ class Controller {
     let noteNames = [];
     this.keyboard.setRange(range, this.settings);
     this.notes = this.keyboard.keys;
-    this.setEffects();
   }
 
   setWaveTypeOsc1(type){
@@ -83,7 +82,14 @@ class Controller {
       bypass: 0
     });
 
-    let effects = [this.chorus, this.delay, this.phaser,
+    this.tremolo = new tuna.Tremolo({
+      intensity: 0.8,    //0 to 1
+      rate: 5,         //0.001 to 8
+      stereoPhase: 0,    //0 to 180
+      bypass: 0
+    });
+
+    let effects = [this.chorus, this.delay, this.phaser, this.tremolo,
                    this.bitcrusher, this.compressor, this.overdrive];
 
     this.eachNote(note => {
@@ -105,9 +111,40 @@ class Controller {
     effect.disconnect(ctx.destination);
   }
 
-  update(effect){
-    effect.disconnect(ctx.destination);
-    effect.connect(ctx.destination);
+  setListeners(){
+    $d('#controller').on('mouseup', 'p', this.handle.bind(this));
+    $d('#controller').on('touchend', 'p', this.handle.bind(this));
+  }
+
+  handle(e){
+    e.preventDefault();
+    let button = $d(e.target).parent()[0];
+    switch (button.classList[0]) {
+      case "osc1":
+        $d('.osc1').removeClass('selected');
+        $d(button).addClass('selected');
+        this.setWaveTypeOsc1(button.id);
+        break;
+      case "osc2":
+        $d('.osc2').removeClass('selected');
+        $d(button).addClass('selected');
+        this.setWaveTypeOsc2(button.id);
+        break;
+      case "range":
+        $d('.range').removeClass('selected');
+        $d(button).addClass('selected');
+        this.setRange(button.id);
+        break;
+      case "effect":
+        if (button.classList.contains("selected")){
+          $d(button).removeClass('selected');
+          this.removeEffect(this[button.id]);
+        } else {
+          $d(button).addClass('selected');
+          this.addEffect(this[button.id]);
+        }
+        break;
+    }
   }
 
   eachNote(callback){

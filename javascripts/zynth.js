@@ -5,7 +5,7 @@ import { Tuna } from './tuna-master/tuna';
 
 $d(function(){
   const docEl = $d('html');
-  const keyBoardElement = $d('#keyboard');
+  const keyBoardElement = $d('#keys');
   const keyboard = new Keyboard({
     parentEl: keyBoardElement,
     docEl: docEl
