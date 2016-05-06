@@ -71,6 +71,7 @@ class Keyboard {
   setRange(noteRange, paramObj){
     for (let note in this.active) {
       this.keys[note].gainNode1.gain.value = 0;
+      this.keys[note].gainNode2.gain.value = 0;
     }
     this.el.setHTML("");
     this.keys = _createKeys(this.el, noteRange, paramObj);

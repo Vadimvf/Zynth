@@ -429,6 +429,7 @@
 	    value: function setRange(noteRange, paramObj) {
 	      for (var note in this.active) {
 	        this.keys[note].gainNode1.gain.value = 0;
+	        this.keys[note].gainNode2.gain.value = 0;
 	      }
 	      this.el.setHTML("");
 	      this.keys = _createKeys(this.el, noteRange, paramObj);
@@ -779,6 +780,7 @@
 	      var noteNames = [];
 	      this.keyboard.setRange(range, this.settings);
 	      this.notes = this.keyboard.keys;
+	      this.connectEffects();
 	    }
 	  }, {
 	    key: 'setWaveTypeOsc1',
@@ -843,14 +845,28 @@
 	        bypass: 0
 	      });
 	
+	      this.connectEffects();
+	    }
+	  }, {
+	    key: 'connectEffects',
+	    value: function connectEffects() {
+	      var limiter = _note.ctx.createDynamicsCompressor();
+	      limiter.threshold.value = 0.0; // this is the pitfall, leave some headroom
+	      limiter.knee.value = 0.0; // brute force
+	      limiter.ratio.value = 20.0; // max compression
+	      limiter.attack.value = 0.005; // 5ms attack
+	      limiter.release.value = 0.050; // 50ms release
+	
 	      var effects = [this.chorus, this.delay, this.phaser, this.tremolo, this.bitcrusher, this.compressor, this.overdrive];
 	
 	      this.eachNote(function (note) {
 	        var gainNode1 = note.gainNode1;
 	        var gainNode2 = note.gainNode2;
 	        effects.forEach(function (effect) {
-	          gainNode1.connect(effect);
-	          gainNode2.connect(effect);
+	          gainNode1.connect(limiter);
+	          gainNode2.connect(limiter);
+	          limiter.connect(_note.ctx.destination);
+	          limiter.connect(effect);
 	        });
 	      });
 	    }
