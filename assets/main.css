@@ -1,5 +1,16 @@
+@font-face {
+    font-family: 'adventor-regular';
+    src: url('./fonts/regular/texgyreadventor-regular-webfont.eot');
+    src: url('./fonts/regular/texgyreadventor-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./fonts/regular/texgyreadventor-regular-webfont.woff') format('woff'),
+         url('./fonts/regular/texgyreadventor-regular-webfont.ttf') format('truetype'),
+         url('./fonts/regular/texgyreadventor-regular-webfont.svg#texgyreadventorregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /*RESET*/
-body, ul, li, div {
+body, ul, li, div, p {
   border: none;
   text-decoration: none;
   margin: 0;
@@ -8,12 +19,14 @@ body, ul, li, div {
   box-sizing: border-box;
   height: auto;
   font-size: inherit;
+  font-family: 'adventor-regular', sans-serif;
+  font-weight: 100;
+  text-align: center;
 }
 
 HTML, body {
   height: 100%;
   min-height: 100%;
-  font-size: 100%;
 }
 
 
@@ -32,6 +45,7 @@ li {
 }
 
 li > div {
+  cursor: pointer;
   background-color: white;
   height: 100%;
   border: 1px solid rgb(166, 166, 166);
@@ -55,26 +69,85 @@ li > div {
 }
 
 .pressed {
-  background-color: #f5da69;
-  border: 5px solid #1c6891;
+  background-color: #d1edee;
+  border: 5px solid #d8d4e0;
 }
 
 .hidden {
   width: 0;
 }
 
-.control {
-  width: 16.666666%;
-  border: 1px solid red;
+p {
+  font-size: 14px;
+  font-size: 1.25vmax;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: translate(0, 25%);
+}
+
+.upper > li {
+  width: 12.5%;
+  color: white;
   height: 100%;
+  background-color: #393a3b;
+}
+
+li.osc1 {
+  border: 1px solid #9d55b3;
+}
+
+li.osc2 {
+  border: 1px solid #5cc486;
+}
+
+li.osc1.selected {
+  color: #9d55b3;
+  border-bottom: 7px solid #9d55b3;
+}
+
+li.osc2.selected {
+  color: #5cc486;
+  border-bottom: 7px solid #5cc486;
+}
+
+.lower > li {
+  width: 11.111%;
+  border: 1px solid #55adb3;
+  background-color: #393a3b;
+  height: 100%;
+  color: white;
+  font-weight: 300;
+  float: left;
+}
+
+.lower > li.range {
+  border: 1px solid #a38fc7;
+}
+
+.lower > li.range.selected {
+  color: #a38fc7;
+  border-bottom: 5px solid #a38fc7;
+}
+
+.lower > li.selected {
+  color: #55adb3;
+  border-bottom: 5px solid #55adb3;
 }
 
 #controller > ul {
-  height: 100%;
+  height: 50%;
+  cursor: pointer;
 }
 
 #controller {
-  height: 15%;
+  height: 30%;
+}
+
+#keys {
+  height: 70%;
 }
 
 #keyboard {
@@ -102,6 +175,10 @@ li > div {
 }
 
 @media screen and (max-width: 750px) {
+
+  #controller {
+    display: none;
+  }
 
   li {
     list-style: none;

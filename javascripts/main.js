@@ -56,7 +56,7 @@
 	
 	(0, _domAble.$d)(function () {
 	  var docEl = (0, _domAble.$d)('html');
-	  var keyBoardElement = (0, _domAble.$d)('#keyboard');
+	  var keyBoardElement = (0, _domAble.$d)('#keys');
 	  var keyboard = new _keyboard.Keyboard({
 	    parentEl: keyBoardElement,
 	    docEl: docEl
@@ -345,6 +345,8 @@
 	
 	var _constants = __webpack_require__(4);
 	
+	var _controls = __webpack_require__(5);
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var Keyboard = function () {
@@ -425,6 +427,9 @@
 	  }, {
 	    key: 'setRange',
 	    value: function setRange(noteRange, paramObj) {
+	      for (var note in this.active) {
+	        this.keys[note].gainNode1.gain.value = 0;
+	      }
 	      this.el.setHTML("");
 	      this.keys = _createKeys(this.el, noteRange, paramObj);
 	      this.range = noteRange;
@@ -438,12 +443,10 @@
 	function _createKeys(domAbleElement, noteRange, paramObj) {
 	  var keys = _note.Note.createNoteRange(noteRange, paramObj);
 	  var keyObj = {};
-	
 	  keys.forEach(function (key) {
 	    var li = document.createElement("li");
 	    var name = key.name;
 	    var klass = "key";
-	
 	    keyObj[name] = key;
 	    if (name.includes("s")) {
 	      klass += " sharp";
@@ -750,7 +753,6 @@
 	    _classCallCheck(this, Controller);
 	
 	    var controls = _createControls();
-	    this.controls = controls;
 	    this.keyboard = keyboardObj;
 	    this.notes = keyboardObj.keys;
 	    this.settings = {
@@ -760,15 +762,16 @@
 	    this.oscType1 = "sine";
 	    this.oscType2 = "sine";
 	    this.setEffects();
+	    this.setListeners();
 	  }
 	
 	  _createClass(Controller, [{
 	    key: 'setRange',
 	    value: function setRange(rangeId) {
 	      var range = void 0;
-	      if (rangeId === 1) {
+	      if (rangeId === "1") {
 	        range = _constants.OCTAVE.first;
-	      } else if (rangeId === 2) {
+	      } else if (rangeId === "2") {
 	        range = _constants.OCTAVE.second;
 	      } else {
 	        range = _constants.OCTAVE.third;
@@ -776,7 +779,6 @@
 	      var noteNames = [];
 	      this.keyboard.setRange(range, this.settings);
 	      this.notes = this.keyboard.keys;
-	      this.setEffects();
 	    }
 	  }, {
 	    key: 'setWaveTypeOsc1',
@@ -834,7 +836,14 @@
 	        bypass: 0
 	      });
 	
-	      var effects = [this.chorus, this.delay, this.phaser, this.bitcrusher, this.compressor, this.overdrive];
+	      this.tremolo = new tuna.Tremolo({
+	        intensity: 0.8, //0 to 1
+	        rate: 5, //0.001 to 8
+	        stereoPhase: 0, //0 to 180
+	        bypass: 0
+	      });
+	
+	      var effects = [this.chorus, this.delay, this.phaser, this.tremolo, this.bitcrusher, this.compressor, this.overdrive];
 	
 	      this.eachNote(function (note) {
 	        var gainNode1 = note.gainNode1;
@@ -856,10 +865,42 @@
 	      effect.disconnect(_note.ctx.destination);
 	    }
 	  }, {
-	    key: 'update',
-	    value: function update(effect) {
-	      effect.disconnect(_note.ctx.destination);
-	      effect.connect(_note.ctx.destination);
+	    key: 'setListeners',
+	    value: function setListeners() {
+	      (0, _domAble.$d)('#controller').on('mouseup', 'p', this.handle.bind(this));
+	      (0, _domAble.$d)('#controller').on('touchend', 'p', this.handle.bind(this));
+	    }
+	  }, {
+	    key: 'handle',
+	    value: function handle(e) {
+	      e.preventDefault();
+	      var button = (0, _domAble.$d)(e.target).parent()[0];
+	      switch (button.classList[0]) {
+	        case "osc1":
+	          (0, _domAble.$d)('.osc1').removeClass('selected');
+	          (0, _domAble.$d)(button).addClass('selected');
+	          this.setWaveTypeOsc1(button.id);
+	          break;
+	        case "osc2":
+	          (0, _domAble.$d)('.osc2').removeClass('selected');
+	          (0, _domAble.$d)(button).addClass('selected');
+	          this.setWaveTypeOsc2(button.id);
+	          break;
+	        case "range":
+	          (0, _domAble.$d)('.range').removeClass('selected');
+	          (0, _domAble.$d)(button).addClass('selected');
+	          this.setRange(button.id);
+	          break;
+	        case "effect":
+	          if (button.classList.contains("selected")) {
+	            (0, _domAble.$d)(button).removeClass('selected');
+	            this.removeEffect(this[button.id]);
+	          } else {
+	            (0, _domAble.$d)(button).addClass('selected');
+	            this.addEffect(this[button.id]);
+	          }
+	          break;
+	      }
 	    }
 	  }, {
 	    key: 'eachNote',
