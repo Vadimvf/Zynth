@@ -76,10 +76,10 @@ class Controller {
     });
 
     this.overdrive = new tuna.Overdrive({
-      outputGain: 0.4,         //0 to 1+
+      outputGain: 1,         //0 to 1+
       drive: 1,              //0 to 1
       curveAmount: 1,          //0 to 1
-      algorithmIndex: 3,       //0 to 5, selects one of our drive algorithms
+      algorithmIndex: 5,       //0 to 5, selects one of our drive algorithms
       bypass: 0
     });
 

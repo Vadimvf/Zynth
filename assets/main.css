@@ -10,7 +10,7 @@
 }
 
 /*RESET*/
-body, ul, li, div, p {
+body, ul, li, div, p, a {
   border: none;
   text-decoration: none;
   margin: 0;
@@ -224,6 +224,32 @@ li.osc2.selected {
     height: 0;
   }
 
+  div.links {
+    display: none;
+  }
+
+}
+
+div.links {
+  position: relative;
+  width: 100%;
+  text-align: center;
+}
+
+ul.links-list {
+  position: absolute;
+  width: 100%;
+  top: -15px;
+}
+
+ul.links-list > li {
+  float: right;
+  width: 33.333%;
+}
+
+div.links a {
+  color: #55adb3;
+  width: 100px;
 }
 
 @media screen and (max-width: 500px) and (max-height: 750px){

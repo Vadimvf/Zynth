@@ -68,7 +68,8 @@ class DOMNodeCollection {
   }
 
   empty(){
-    this.html("");
+    this.setHTML("");
+    return this;
   }
 
   append(item){
@@ -81,6 +82,8 @@ class DOMNodeCollection {
     } else {
       _setInner(item);
     }
+
+    return this;
   }
 
   addClass(string){
@@ -116,6 +119,8 @@ class DOMNodeCollection {
     } else if (classes === undefined) {
       this.each(el => _remove(el, el.classList));
     }
+
+    return this;
   }
 
   children(){
@@ -165,6 +170,7 @@ class DOMNodeCollection {
     }
 
     this.each (el => el.addEventListener(eventType, delegatedListener));
+
     return delegatedListener;
   }
 
@@ -177,6 +183,7 @@ class DOMNodeCollection {
       let key = Object.keys(this)[i];
       this[key] = $d(this[key]);
     }
+
     return this;
   }
 // end Class DOMNodeCollection

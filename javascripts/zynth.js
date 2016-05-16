@@ -12,5 +12,5 @@ $d(function(){
   });
   keyboard.setListeners();
   const controller = new Controller(keyboard);
-  window.controller = controller;
+  window.$d = $d;
 });

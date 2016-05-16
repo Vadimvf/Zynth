@@ -63,7 +63,7 @@
 	  });
 	  keyboard.setListeners();
 	  var controller = new _controls.Controller(keyboard);
-	  window.controller = controller;
+	  window.$d = _domAble.$d;
 	});
 
 /***/ },
@@ -162,7 +162,8 @@
 	  }, {
 	    key: "empty",
 	    value: function empty() {
-	      this.html("");
+	      this.setHTML("");
+	      return this;
 	    }
 	  }, {
 	    key: "append",
@@ -184,6 +185,8 @@
 	      } else {
 	        _setInner(item);
 	      }
+	
+	      return this;
 	    }
 	  }, {
 	    key: "addClass",
@@ -233,6 +236,8 @@
 	          return _remove(el, el.classList);
 	        });
 	      }
+	
+	      return this;
 	    }
 	  }, {
 	    key: "children",
@@ -299,6 +304,7 @@
 	      this.each(function (el) {
 	        return el.addEventListener(eventType, delegatedListener);
 	      });
+	
 	      return delegatedListener;
 	    }
 	  }, {
@@ -315,6 +321,7 @@
 	        var key = Object.keys(this)[i];
 	        this[key] = $d(this[key]);
 	      }
+	
 	      return this;
 	    }
 	    // end Class DOMNodeCollection
@@ -831,10 +838,10 @@
 	      });
 	
 	      this.overdrive = new tuna.Overdrive({
-	        outputGain: 0.4, //0 to 1+
+	        outputGain: 1, //0 to 1+
 	        drive: 1, //0 to 1
 	        curveAmount: 1, //0 to 1
-	        algorithmIndex: 3, //0 to 5, selects one of our drive algorithms
+	        algorithmIndex: 5, //0 to 5, selects one of our drive algorithms
 	        bypass: 0
 	      });
 	
