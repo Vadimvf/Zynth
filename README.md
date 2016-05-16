@@ -3,7 +3,7 @@
 [Play the Zynth!][Zynth]
 [Zynth]: http://vadimvf.github.io/Zynth/
 
-##Screenshots
+##Screenshot
 ![screenshot 1](https://raw.githubusercontent.com/Vadimvf/Zynth/gh-pages/assets/Screen%20Shot%202016-05-16%20at%2011.49.35%20AM.png)
 
 
