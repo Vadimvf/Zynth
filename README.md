@@ -3,6 +3,9 @@
 [Play the Zynth!][Zynth]
 [Zynth]: http://vadimvf.github.io/Zynth/
 
+##Screenshots
+
+
 ##Libraries Used
 - [domAble](https://github.com/Vadimvf/domAble]domable)
   - Event listeners, DOM element creation, DOM manipulation
@@ -15,7 +18,7 @@
 - 6 Effects
   - Chorus
   - Delay
-  - Phaser 
+  - Phaser
   - BitCrusher
   - Drive
   - Tremolo
