@@ -45,15 +45,15 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	
+
 	var _domAble = __webpack_require__(1);
-	
+
 	var _keyboard = __webpack_require__(2);
-	
+
 	var _controls = __webpack_require__(5);
-	
+
 	var _tuna = __webpack_require__(6);
-	
+
 	(0, _domAble.$d)(function () {
 	  var docEl = (0, _domAble.$d)('html');
 	  var keyBoardElement = (0, _domAble.$d)('#keys');
@@ -63,11 +63,8 @@
 	  });
 	  keyboard.setListeners();
 	  var controller = new _controls.Controller(keyboard);
-<<<<<<< HEAD
 	  window.$d = _domAble.$d;
-=======
 	  window.controller = controller;
->>>>>>> a9de5f3e138ea6921dd6ce3d8458ef61d0d5d2f0
 	});
 
 /***/ },
@@ -75,15 +72,15 @@
 /***/ function(module, exports) {
 
 	"use strict";
-	
+
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
+
 	var $d = function $d(param) {
 	  if (typeof param === "string") {
 	    var list = document.querySelectorAll(param);
@@ -95,49 +92,49 @@
 	    document.addEventListener("DOMContentLoaded", param);
 	  }
 	};
-	
+
 	$d.isEmptyObject = function (obj) {
 	  if (Object.keys(obj).length === 0 && JSON.stringify(obj) === JSON.stringify({})) {
 	    return true;
 	  }
 	  return false;
 	};
-	
+
 	$d.merge = function () {
 	  for (var _len = arguments.length, objects = Array(_len), _key = 0; _key < _len; _key++) {
 	    objects[_key] = arguments[_key];
 	  }
-	
+
 	  if (objects.length <= 1) return objects;
 	  var accum = objects[0];
-	
+
 	  for (var i = 1; i < objects.length; i++) {
 	    if ($d.isEmptyObject(objects[i])) continue;
-	
+
 	    for (var j = 0; j < Object.keys(objects[i]).length; j++) {
 	      var key = Object.keys(objects[i])[j];
 	      accum[key] = objects[i][key];
 	    }
 	  }
-	
+
 	  return accum;
 	};
-	
+
 	$d.isMatch = function (el, selector) {
 	  var elProto = Element.prototype;
 	  var func = elProto.matches || elProto.webkitMatchesSelector || elProto.msMatchesSelector;
 	  return func.call(el, selector);
 	};
-	
+
 	var DOMNodeCollection = function () {
 	  function DOMNodeCollection(array) {
 	    _classCallCheck(this, DOMNodeCollection);
-	
+
 	    for (var i = 0; i < array.length; i++) {
 	      this[i] = array[i];
 	    }this.length = array.length;
 	  }
-	
+
 	  _createClass(DOMNodeCollection, [{
 	    key: "each",
 	    value: function each(callback) {
@@ -173,13 +170,13 @@
 	    key: "append",
 	    value: function append(item) {
 	      var _this = this;
-	
+
 	      var _setInner = function _setInner(html) {
 	        return _this.each(function (el) {
 	          return el.innerHTML += html;
 	        });
 	      };
-	
+
 	      if (item instanceof DOMNodeCollection) {
 	        item.each(function (innerEl) {
 	          return _setInner(innerEl.outerHTML);
@@ -189,7 +186,7 @@
 	      } else {
 	        _setInner(item);
 	      }
-	
+
 	      return this;
 	    }
 	  }, {
@@ -201,13 +198,13 @@
 	          return el.classList.add(klass);
 	        });
 	      }
-	
+
 	      if (typeof string === "string") {
 	        this.each(function (el) {
 	          return _addClasses(el, string);
 	        });
 	      }
-	
+
 	      return this;
 	    }
 	  }, {
@@ -218,7 +215,7 @@
 	          return el.id = string;
 	        });
 	      }
-	
+
 	      return this;
 	    }
 	  }, {
@@ -229,7 +226,7 @@
 	          return el.classList.remove(klass);
 	        });
 	      };
-	
+
 	      if (typeof classes === "string") {
 	        classes = classes.split(" ");
 	        this.each(function (el) {
@@ -240,31 +237,31 @@
 	          return _remove(el, el.classList);
 	        });
 	      }
-	
+
 	      return this;
 	    }
 	  }, {
 	    key: "children",
 	    value: function children() {
 	      var allChildren = [];
-	
+
 	      this.each(function (el) {
 	        var elChildren = [].slice.call(el.children);
 	        allChildren.push(elChildren);
 	      });
-	
+
 	      return new DOMNodeCollection(allChildren);
 	    }
 	  }, {
 	    key: "parent",
 	    value: function parent() {
 	      var allParents = [];
-	
+
 	      this.each(function (el) {
 	        var elParent = el.parentNode;
 	        allParents.push(elParent);
 	      });
-	
+
 	      return new DOMNodeCollection(allParents);
 	    }
 	  }, {
@@ -272,12 +269,12 @@
 	    value: function find(selector) {
 	      if (!(typeof selector === "string")) return null;
 	      var list = [];
-	
+
 	      this.each(function (el) {
 	        var elFound = [].slice.call(el.querySelectorAll(selector));
 	        list.push(elFound);
 	      });
-	
+
 	      list.reduce(function (a, b) {
 	        return a.concat(b);
 	      });
@@ -289,29 +286,25 @@
 	      for (var _len2 = arguments.length, targetListener = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
 	        targetListener[_key2 - 1] = arguments[_key2];
 	      }
-	
+
 	      var delegatedListener = targetListener[0];
-	
-	
+
+
 	      if (targetListener.length > 1) {
 	        (function () {
 	          var target = targetListener[0];
 	          var listener = targetListener[1];
-	
-	
+
+
 	          delegatedListener = function delegatedListener(e, nodeEl) {
 	            if ($d.isMatch(e.target, target)) listener(e);
 	          };
 	        })();
 	      }
-	
+
 	      this.each(function (el) {
 	        return el.addEventListener(eventType, delegatedListener);
 	      });
-<<<<<<< HEAD
-	
-=======
->>>>>>> a9de5f3e138ea6921dd6ce3d8458ef61d0d5d2f0
 	      return delegatedListener;
 	    }
 	  }, {
@@ -328,16 +321,16 @@
 	        var key = Object.keys(this)[i];
 	        this[key] = $d(this[key]);
 	      }
-	
+
 	      return this;
 	    }
 	    // end Class DOMNodeCollection
-	
+
 	  }]);
-	
+
 	  return DOMNodeCollection;
 	}();
-	
+
 	exports.$d = $d;
 
 /***/ },
@@ -345,33 +338,33 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	
+
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	exports.Keyboard = undefined;
-	
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
+
 	var _note = __webpack_require__(3);
-	
+
 	var _domAble = __webpack_require__(1);
-	
+
 	var _constants = __webpack_require__(4);
-	
+
 	var _controls = __webpack_require__(5);
-	
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
+
 	var Keyboard = function () {
 	  function Keyboard(_ref) {
 	    var parentEl = _ref.parentEl;
 	    var docEl = _ref.docEl;
 	    var _ref$noteRange = _ref.noteRange;
 	    var noteRange = _ref$noteRange === undefined ? _constants.OCTAVE.second : _ref$noteRange;
-	
+
 	    _classCallCheck(this, Keyboard);
-	
+
 	    var keys = _createKeys(parentEl, noteRange, {});
 	    this.keys = keys;
 	    this.range = noteRange;
@@ -380,7 +373,7 @@
 	    this.active = {};
 	    this.slideListener = null;
 	  }
-	
+
 	  _createClass(Keyboard, [{
 	    key: 'setListeners',
 	    value: function setListeners() {
@@ -389,10 +382,10 @@
 	      el.on('mousedown', 'div.key', this.playNote.bind(this));
 	      el.on('mouseout', 'div.key', this.stopNote.bind(this));
 	      ctx.on('mouseup', this.stopNote.bind(this));
-	
+
 	      el.on('touchstart', 'div.key', this.playNote.bind(this));
 	      el.on('touchend', 'div.key', this.stopNote.bind(this));
-	
+
 	      ctx.on('keydown', this.playNote.bind(this));
 	      ctx.on('keyup', this.stopNote.bind(this));
 	    }
@@ -409,10 +402,10 @@
 	      } else {
 	        keyId = e.target.id;
 	      }
-	
+
 	      if (!keyId) return;
 	      if (this.active[keyId]) return;
-	
+
 	      this.active[keyId] = true;
 	      var li = (0, _domAble.$d)('div#' + keyId);
 	      li.addClass("pressed");
@@ -432,7 +425,7 @@
 	        keyId = e.target.id;
 	      }
 	      if (!this.active[keyId]) return;
-	
+
 	      this.active[keyId] = false;
 	      var li = (0, _domAble.$d)('div#' + keyId);
 	      this.keys[keyId].togglePress();
@@ -451,10 +444,10 @@
 	      this.active = {};
 	    }
 	  }]);
-	
+
 	  return Keyboard;
 	}();
-	
+
 	function _createKeys(domAbleElement, noteRange, paramObj) {
 	  var keys = _note.Note.createNoteRange(noteRange, paramObj);
 	  var keyObj = {};
@@ -468,13 +461,13 @@
 	      (0, _domAble.$d)(li).addClass("hidden");
 	    }
 	    var keyEl = (0, _domAble.$d)(li).setHTML('<div class="' + klass + '" id=' + name + '></div>');
-	
+
 	    domAbleElement.append(keyEl);
 	  });
-	
+
 	  return keyObj;
 	};
-	
+
 	exports.Keyboard = Keyboard;
 
 /***/ },
@@ -482,29 +475,29 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	
+
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	exports.ctx = exports.Note = undefined;
-	
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
+
 	var _constants = __webpack_require__(4);
-	
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
+
 	var ctx = new (window.AudioContext || window.webkitAudioContext)();
-	
+
 	var Note = function () {
 	  function Note(noteName, _ref) {
 	    var _ref$oscType = _ref.oscType1;
 	    var oscType1 = _ref$oscType === undefined ? "sine" : _ref$oscType;
 	    var _ref$oscType2 = _ref.oscType2;
 	    var oscType2 = _ref$oscType2 === undefined ? "sine" : _ref$oscType2;
-	
+
 	    _classCallCheck(this, Note);
-	
+
 	    this.name = noteName;
 	    this.freq = _constants.TONES[noteName];
 	    this.oscillatorNode1 = _createOscillator(this.freq, oscType1);
@@ -515,7 +508,7 @@
 	    this.oscillatorNode2.connect(this.gainNode2);
 	    this.isPressed = false;
 	  }
-	
+
 	  _createClass(Note, [{
 	    key: "togglePress",
 	    value: function togglePress() {
@@ -541,19 +534,19 @@
 	      return range;
 	    }
 	  }]);
-	
+
 	  return Note;
 	}();
-	
+
 	;
-	
+
 	function _createGainNode() {
 	  var gainNode = ctx.createGain();
 	  gainNode.gain.value = 0;
 	  gainNode.connect(ctx.destination);
 	  return gainNode;
 	};
-	
+
 	function _createOscillator(freq, type) {
 	  var osc = ctx.createOscillator();
 	  osc.type = type;
@@ -562,7 +555,7 @@
 	  osc.start(ctx.currentTime);
 	  return osc;
 	};
-	
+
 	exports.Note = Note;
 	exports.ctx = ctx;
 
@@ -571,7 +564,7 @@
 /***/ function(module, exports) {
 
 	'use strict';
-	
+
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
@@ -594,7 +587,7 @@
 	  80: 'aD3s',
 	  186: 'aE3'
 	};
-	
+
 	var NOTES_MIDDLE = {
 	  65: 'aC3',
 	  87: 'aC3s',
@@ -614,7 +607,7 @@
 	  80: 'bD4s',
 	  186: 'bE4'
 	};
-	
+
 	var NOTES_HIGH = {
 	  65: 'bC4',
 	  87: 'bC4s',
@@ -634,13 +627,13 @@
 	  80: 'cD5s',
 	  186: 'cE5'
 	};
-	
+
 	var OCTAVE = {
 	  first: NOTES_LOW,
 	  second: NOTES_MIDDLE,
 	  third: NOTES_HIGH
 	};
-	
+
 	var KEY_MAP = {
 	  a: 65,
 	  b: 66,
@@ -670,7 +663,7 @@
 	  z: 90,
 	  semicolon: 186
 	};
-	
+
 	var TONES = {
 	  aaC2: 65.41,
 	  aaC2s: 69.3,
@@ -733,7 +726,7 @@
 	  H6s: 1864.66,
 	  I6: 1975.53
 	};
-	
+
 	exports.KEY_MAP = KEY_MAP;
 	exports.TONES = TONES;
 	exports.OCTAVE = OCTAVE;
@@ -743,30 +736,30 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	
+
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	exports.Controller = undefined;
-	
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
+
 	var _constants = __webpack_require__(4);
-	
+
 	var _note = __webpack_require__(3);
-	
+
 	var _domAble = __webpack_require__(1);
-	
+
 	var _tuna = __webpack_require__(6);
-	
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
+
 	var tuna = new _tuna.Tuna(_note.ctx);
-	
+
 	var Controller = function () {
 	  function Controller(keyboardObj) {
 	    _classCallCheck(this, Controller);
-	
+
 	    var controls = _createControls();
 	    this.keyboard = keyboardObj;
 	    this.notes = keyboardObj.keys;
@@ -779,7 +772,7 @@
 	    this.setEffects();
 	    this.setListeners();
 	  }
-	
+
 	  _createClass(Controller, [{
 	    key: 'setRange',
 	    value: function setRange(rangeId) {
@@ -821,14 +814,14 @@
 	        delay: 0.0045,
 	        bypass: 0
 	      });
-	
+
 	      this.delay = new tuna.PingPongDelay({
 	        wetLevel: 1, //0 to 1
 	        feedback: 0.6, //0 to 1
 	        delayTimeLeft: 150, //1 to 10000 (milliseconds)
 	        delayTimeRight: 200 //1 to 10000 (milliseconds)
 	      });
-	
+
 	      this.phaser = new tuna.Phaser({
 	        rate: 1.2, //0.01 to 8 is a decent range, but higher values are possible
 	        depth: 0.3, //0 to 1
@@ -837,35 +830,32 @@
 	        baseModulationFrequency: 700, //500 to 1500
 	        bypass: 0
 	      });
-	
+
 	      this.bitcrusher = new tuna.Bitcrusher({
 	        bits: 4, //1 to 16
 	        normfreq: 0.1, //0 to 1
 	        bufferSize: 4096 //256 to 16384
 	      });
-	
+
 	      this.overdrive = new tuna.Overdrive({
-<<<<<<< HEAD
 	        outputGain: 1, //0 to 1+
 	        drive: 1, //0 to 1
 	        curveAmount: 1, //0 to 1
 	        algorithmIndex: 5, //0 to 5, selects one of our drive algorithms
-=======
 	        outputGain: 0.4, //0 to 1+
 	        drive: 1, //0 to 1
 	        curveAmount: 1, //0 to 1
 	        algorithmIndex: 3, //0 to 5, selects one of our drive algorithms
->>>>>>> a9de5f3e138ea6921dd6ce3d8458ef61d0d5d2f0
 	        bypass: 0
 	      });
-	
+
 	      this.tremolo = new tuna.Tremolo({
 	        intensity: 0.8, //0 to 1
 	        rate: 5, //0.001 to 8
 	        stereoPhase: 0, //0 to 180
 	        bypass: 0
 	      });
-	
+
 	      this.connectEffects();
 	    }
 	  }, {
@@ -877,9 +867,9 @@
 	      limiter.ratio.value = 20.0; // max compression
 	      limiter.attack.value = 0.005; // 5ms attack
 	      limiter.release.value = 0.050; // 50ms release
-	
+
 	      var effects = [this.chorus, this.delay, this.phaser, this.tremolo, this.bitcrusher, this.compressor, this.overdrive];
-	
+
 	      this.eachNote(function (note) {
 	        var gainNode1 = note.gainNode1;
 	        var gainNode2 = note.gainNode2;
@@ -946,18 +936,18 @@
 	      for (var i = 0; i < keys.length; i++) {
 	        callback(this.notes[keys[i]], i);
 	      }
-	
+
 	      return this.keys;
 	    }
 	  }]);
-	
+
 	  return Controller;
 	}();
-	
+
 	function _createControls() {
 	  var controlEl = (0, _domAble.$d)(controller);
 	}
-	
+
 	exports.Controller = Controller;
 
 /***/ },
@@ -965,20 +955,20 @@
 /***/ function(module, exports) {
 
 	"use strict";
-	
+
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 	/*
 	    Copyright (c) 2012 DinahMoe AB & Oskar Eriksson
-	
+
 	    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
 	    files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
 	    modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
 	    is furnished to do so, subject to the following conditions:
-	
+
 	    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-	
+
 	    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 	    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 	    DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
@@ -1059,7 +1049,7 @@
 	                _is = this.defaults[property],
 	                param = this[property],
 	                method;
-	
+
 	            if (param) {
 	                if (_is.automatable) {
 	                    if (!duration) {
@@ -1083,7 +1073,7 @@
 	    BOOLEAN = "boolean",
 	    STRING = "string",
 	    INT = "int";
-	
+
 	function Tuna(context) {
 	    if (!(this instanceof Tuna)) {
 	        return new Tuna(context);
@@ -1102,17 +1092,17 @@
 	    userContext = context;
 	    userInstance = this;
 	}
-	
+
 	function connectify(context) {
 	    if (context.__connectified__ === true) return;
-	
+
 	    var gain = context.createGain(),
 	        proto = Object.getPrototypeOf(Object.getPrototypeOf(gain)),
 	        oconnect = proto.connect;
-	
+
 	    proto.connect = shimConnect;
 	    context.__connectified__ = true; // Prevent overriding connect more than once
-	
+
 	    function shimConnect() {
 	        var node = arguments[0];
 	        if (node === undefined) return;
@@ -1121,11 +1111,11 @@
 	        return node;
 	    }
 	}
-	
+
 	function dbToWAVolume(db) {
 	    return Math.max(0, Math.round(100 * Math.pow(2, db / 6)) / 100);
 	}
-	
+
 	function fmod(x, y) {
 	    // http://kevin.vanzonneveld.net
 	    // *     example 1: fmod(5.7, 1.3);
@@ -1136,29 +1126,29 @@
 	        pY = 0,
 	        l = 0.0,
 	        l2 = 0.0;
-	
+
 	    tmp = x.toExponential().match(/^.\.?(.*)e(.+)$/);
 	    p = parseInt(tmp[2], 10) - (tmp[1] + "").length;
 	    tmp = y.toExponential().match(/^.\.?(.*)e(.+)$/);
 	    pY = parseInt(tmp[2], 10) - (tmp[1] + "").length;
-	
+
 	    if (pY > p) {
 	        p = pY;
 	    }
-	
+
 	    tmp2 = x % y;
-	
+
 	    if (p < -100 || p > 20) {
 	        // toFixed will give an out of bound error so we fix it like this:
 	        l = Math.round(Math.log(tmp2) / Math.log(10));
 	        l2 = Math.pow(10, l);
-	
+
 	        return (tmp2 / l2).toFixed(l - p) * l2;
 	    } else {
 	        return parseFloat(tmp2.toFixed(-p));
 	    }
 	}
-	
+
 	function sign(x) {
 	    if (x === 0) {
 	        return 1;
@@ -1166,29 +1156,29 @@
 	        return Math.abs(x) / x;
 	    }
 	}
-	
+
 	function tanh(n) {
 	    return (Math.exp(n) - Math.exp(-n)) / (Math.exp(n) + Math.exp(-n));
 	}
-	
+
 	function initValue(userVal, defaultVal) {
 	    return userVal === undefined ? defaultVal : userVal;
 	}
-	
+
 	Tuna.prototype.Bitcrusher = function (properties) {
 	    if (!properties) {
 	        properties = this.getDefaults();
 	    }
 	    this.bufferSize = properties.bufferSize || this.defaults.bufferSize.value;
-	
+
 	    this.input = userContext.createGain();
 	    this.activateNode = userContext.createGain();
 	    this.processor = userContext.createScriptProcessor(this.bufferSize, 1, 1);
 	    this.output = userContext.createGain();
-	
+
 	    this.activateNode.connect(this.processor);
 	    this.processor.connect(this.output);
-	
+
 	    var phaser = 0,
 	        last = 0,
 	        input,
@@ -1208,7 +1198,7 @@
 	            output[i] = last;
 	        }
 	    };
-	
+
 	    this.bits = properties.bits || this.defaults.bits.value;
 	    this.normfreq = initValue(properties.normfreq, this.defaults.normfreq.value);
 	    this.bypass = properties.bypass || false;
@@ -1267,7 +1257,7 @@
 	        }
 	    }
 	});
-	
+
 	Tuna.prototype.Cabinet = function (properties) {
 	    if (!properties) {
 	        properties = this.getDefaults();
@@ -1277,11 +1267,11 @@
 	    this.convolver = this.newConvolver(properties.impulsePath || "../impulses/impulse_guitar.wav");
 	    this.makeupNode = userContext.createGain();
 	    this.output = userContext.createGain();
-	
+
 	    this.activateNode.connect(this.convolver.input);
 	    this.convolver.output.connect(this.makeupNode);
 	    this.makeupNode.connect(this.output);
-	
+
 	    this.makeupGain = initValue(properties.makeupGain, this.defaults.makeupGain);
 	    this.bypass = properties.bypass || false;
 	};
@@ -1325,7 +1315,7 @@
 	        }
 	    }
 	});
-	
+
 	Tuna.prototype.Chorus = function (properties) {
 	    if (!properties) {
 	        properties = this.getDefaults();
@@ -1339,7 +1329,7 @@
 	    this.feedbackGainNodeRL = userContext.createGain();
 	    this.merger = userContext.createChannelMerger(2);
 	    this.output = userContext.createGain();
-	
+
 	    this.lfoL = new userInstance.LFO({
 	        target: this.delayL.delayTime,
 	        callback: pipe
@@ -1348,7 +1338,7 @@
 	        target: this.delayR.delayTime,
 	        callback: pipe
 	    });
-	
+
 	    this.input.connect(this.attenuator);
 	    this.attenuator.connect(this.output);
 	    this.attenuator.connect(this.splitter);
@@ -1361,7 +1351,7 @@
 	    this.delayL.connect(this.merger, 0, 0);
 	    this.delayR.connect(this.merger, 0, 1);
 	    this.merger.connect(this.output);
-	
+
 	    this.feedback = initValue(properties.feedback, this.defaults.feedback.value);
 	    this.rate = initValue(properties.rate, this.defaults.rate.value);
 	    this.delay = initValue(properties.delay, this.defaults.delay.value);
@@ -1460,7 +1450,7 @@
 	        }
 	    }
 	});
-	
+
 	Tuna.prototype.Compressor = function (properties) {
 	    if (!properties) {
 	        properties = this.getDefaults();
@@ -1469,10 +1459,10 @@
 	    this.compNode = this.activateNode = userContext.createDynamicsCompressor();
 	    this.makeupNode = userContext.createGain();
 	    this.output = userContext.createGain();
-	
+
 	    this.compNode.connect(this.makeupNode);
 	    this.makeupNode.connect(this.output);
-	
+
 	    this.automakeup = initValue(properties.automakeup, this.defaults.automakeup.value);
 	    this.makeupGain = properties.makeupGain || this.defaults.makeupGain.value;
 	    this.threshold = initValue(properties.threshold, this.defaults.threshold.value);
@@ -1619,7 +1609,7 @@
 	        }
 	    }
 	});
-	
+
 	Tuna.prototype.Convolver = function (properties) {
 	    if (!properties) {
 	        properties = this.getDefaults();
@@ -1632,7 +1622,7 @@
 	    this.filterHigh = userContext.createBiquadFilter();
 	    this.wet = userContext.createGain();
 	    this.output = userContext.createGain();
-	
+
 	    this.activateNode.connect(this.filterLow);
 	    this.activateNode.connect(this.dry);
 	    this.filterLow.connect(this.filterHigh);
@@ -1640,7 +1630,7 @@
 	    this.convolver.connect(this.wet);
 	    this.wet.connect(this.output);
 	    this.dry.connect(this.output);
-	
+
 	    this.dryLevel = initValue(properties.dryLevel, this.defaults.dryLevel.value);
 	    this.wetLevel = initValue(properties.wetLevel, this.defaults.wetLevel.value);
 	    this.highCut = properties.highCut || this.defaults.highCut.value;
@@ -1764,7 +1754,7 @@
 	        }
 	    }
 	});
-	
+
 	Tuna.prototype.Delay = function (properties) {
 	    if (!properties) {
 	        properties = this.getDefaults();
@@ -1777,7 +1767,7 @@
 	    this.delay = userContext.createDelay();
 	    this.feedbackNode = userContext.createGain();
 	    this.output = userContext.createGain();
-	
+
 	    this.activateNode.connect(this.delay);
 	    this.activateNode.connect(this.dry);
 	    this.delay.connect(this.filter);
@@ -1786,7 +1776,7 @@
 	    this.feedbackNode.connect(this.wet);
 	    this.wet.connect(this.output);
 	    this.dry.connect(this.output);
-	
+
 	    this.delayTime = properties.delayTime || this.defaults.delayTime.value;
 	    this.feedback = initValue(properties.feedback, this.defaults.feedback.value);
 	    this.wetLevel = initValue(properties.wetLevel, this.defaults.wetLevel.value);
@@ -1885,7 +1875,7 @@
 	        }
 	    }
 	});
-	
+
 	Tuna.prototype.Filter = function (properties) {
 	    if (!properties) {
 	        properties = this.getDefaults();
@@ -1894,10 +1884,10 @@
 	    this.activateNode = userContext.createGain();
 	    this.filter = userContext.createBiquadFilter();
 	    this.output = userContext.createGain();
-	
+
 	    this.activateNode.connect(this.filter);
 	    this.filter.connect(this.output);
-	
+
 	    this.frequency = properties.frequency || this.defaults.frequency.value;
 	    this.Q = properties.resonance || this.defaults.Q.value;
 	    this.filterType = initValue(properties.filterType, this.defaults.filterType.value);
@@ -1981,21 +1971,21 @@
 	        }
 	    }
 	});
-	
+
 	Tuna.prototype.MoogFilter = function (properties) {
 	    if (!properties) {
 	        properties = this.getDefaults();
 	    }
 	    this.bufferSize = properties.bufferSize || this.defaults.bufferSize.value;
-	
+
 	    this.input = userContext.createGain();
 	    this.activateNode = userContext.createGain();
 	    this.processor = userContext.createScriptProcessor(this.bufferSize, 1, 1);
 	    this.output = userContext.createGain();
-	
+
 	    this.activateNode.connect(this.processor);
 	    this.processor.connect(this.output);
-	
+
 	    var in1, in2, in3, in4, out1, out2, out3, out4;
 	    in1 = in2 = in3 = in4 = out1 = out2 = out3 = out4 = 0.0;
 	    var input, output, f, fb, i, length, inputFactor;
@@ -2017,7 +2007,7 @@
 	            output[i] = out4;
 	        }
 	    };
-	
+
 	    this.cutoff = initValue(properties.cutoff, this.defaults.cutoff.value);
 	    this.resonance = initValue(properties.resonance, this.defaults.resonance.value);
 	    this.bypass = properties.bypass || false;
@@ -2076,7 +2066,7 @@
 	        }
 	    }
 	});
-	
+
 	Tuna.prototype.Overdrive = function (properties) {
 	    if (!properties) {
 	        properties = this.getDefaults();
@@ -2087,12 +2077,12 @@
 	    this.waveshaper = userContext.createWaveShaper();
 	    this.outputDrive = userContext.createGain();
 	    this.output = userContext.createGain();
-	
+
 	    this.activateNode.connect(this.inputDrive);
 	    this.inputDrive.connect(this.waveshaper);
 	    this.waveshaper.connect(this.outputDrive);
 	    this.outputDrive.connect(this.output);
-	
+
 	    this.ws_table = new Float32Array(this.k_nSamples);
 	    this.drive = initValue(properties.drive, this.defaults.drive.value);
 	    this.outputGain = initValue(properties.outputGain, this.defaults.outputGain.value);
@@ -2234,10 +2224,10 @@
 	            }
 	        }, function (amount, n_samples, ws_table) {
 	            var a = 2 + Math.round(amount * 14),
-	
+
 	            // we go from 2 to 16 bits, keep in mind for the UI
 	            bits = Math.round(Math.pow(2, a - 1)),
-	
+
 	            // real number of quantization steps divided by 2
 	            i,
 	                x;
@@ -2248,7 +2238,7 @@
 	        }]
 	    }
 	});
-	
+
 	Tuna.prototype.Phaser = function (properties) {
 	    if (!properties) {
 	        properties = this.getDefaults();
@@ -2270,7 +2260,7 @@
 	        target: this.filtersR,
 	        callback: this.callback
 	    });
-	
+
 	    var i = this.stage;
 	    while (i--) {
 	        this.filtersL[i] = userContext.createBiquadFilter();
@@ -2291,13 +2281,13 @@
 	    this.feedbackGainNodeL.connect(this.filtersL[0]);
 	    this.feedbackGainNodeR.connect(this.filtersR[0]);
 	    this.merger.connect(this.output);
-	
+
 	    this.rate = initValue(properties.rate, this.defaults.rate.value);
 	    this.baseModulationFrequency = properties.baseModulationFrequency || this.defaults.baseModulationFrequency.value;
 	    this.depth = initValue(properties.depth, this.defaults.depth.value);
 	    this.feedback = initValue(properties.feedback, this.defaults.feedback.value);
 	    this.stereoPhase = initValue(properties.stereoPhase, this.defaults.stereoPhase.value);
-	
+
 	    this.lfoL.activate(true);
 	    this.lfoR.activate(true);
 	    this.bypass = properties.bypass || false;
@@ -2410,7 +2400,7 @@
 	        }
 	    }
 	});
-	
+
 	Tuna.prototype.PingPongDelay = function (properties) {
 	    if (!properties) {
 	        properties = this.getDefaults();
@@ -2422,11 +2412,11 @@
 	    this.output = userContext.createGain();
 	    this.delayLeft = userContext.createDelay();
 	    this.delayRight = userContext.createDelay();
-	
+
 	    this.activateNode = userContext.createGain();
 	    this.splitter = userContext.createChannelSplitter(2);
 	    this.merger = userContext.createChannelMerger(2);
-	
+
 	    this.activateNode.connect(this.splitter);
 	    this.splitter.connect(this.stereoToMonoMix, 0, 0);
 	    this.splitter.connect(this.stereoToMonoMix, 1, 0);
@@ -2440,7 +2430,7 @@
 	    this.delayRight.connect(this.merger, 0, 1);
 	    this.merger.connect(this.output);
 	    this.activateNode.connect(this.output);
-	
+
 	    this.delayTimeLeft = properties.delayTimeLeft !== undefined ? properties.delayTimeLeft : this.defaults.delayTimeLeft.value;
 	    this.delayTimeRight = properties.delayTimeRight !== undefined ? properties.delayTimeRight : this.defaults.delayTimeRight.value;
 	    this.feedbackLevel.gain.value = properties.feedback !== undefined ? properties.feedback : this.defaults.feedback.value;
@@ -2505,7 +2495,7 @@
 	        }
 	    }
 	});
-	
+
 	Tuna.prototype.Tremolo = function (properties) {
 	    if (!properties) {
 	        properties = this.getDefaults();
@@ -2520,22 +2510,22 @@
 	        target: this.amplitudeR.gain,
 	        callback: pipe
 	    });
-	
+
 	    this.input.connect(this.splitter);
 	    this.splitter.connect(this.amplitudeL, 0);
 	    this.splitter.connect(this.amplitudeR, 1);
 	    this.amplitudeL.connect(this.merger, 0, 0);
 	    this.amplitudeR.connect(this.merger, 0, 1);
 	    this.merger.connect(this.output);
-	
+
 	    this.rate = properties.rate || this.defaults.rate.value;
 	    this.intensity = initValue(properties.intensity, this.defaults.intensity.value);
 	    this.stereoPhase = initValue(properties.stereoPhase, this.defaults.stereoPhase.value);
-	
+
 	    this.lfoL.offset = 1 - this.intensity / 2;
 	    this.lfoR.offset = 1 - this.intensity / 2;
 	    this.lfoL.phase = this.stereoPhase * Math.PI / 180;
-	
+
 	    this.lfoL.activate(true);
 	    this.lfoR.activate(true);
 	    this.bypass = properties.bypass || false;
@@ -2607,7 +2597,7 @@
 	        }
 	    }
 	});
-	
+
 	Tuna.prototype.WahWah = function (properties) {
 	    if (!properties) {
 	        properties = this.getDefaults();
@@ -2623,12 +2613,12 @@
 	    this.filterBp = userContext.createBiquadFilter();
 	    this.filterPeaking = userContext.createBiquadFilter();
 	    this.output = userContext.createGain();
-	
+
 	    //Connect AudioNodes
 	    this.activateNode.connect(this.filterBp);
 	    this.filterBp.connect(this.filterPeaking);
 	    this.filterPeaking.connect(this.output);
-	
+
 	    //Set Properties
 	    this.init();
 	    this.automode = initValue(properties.enableAutoMode, this.defaults.automode.value);
@@ -2637,7 +2627,7 @@
 	    this.baseFrequency = initValue(properties.baseFrequency, this.defaults.baseFrequency.value);
 	    this.excursionOctaves = properties.excursionOctaves || this.defaults.excursionOctaves.value;
 	    this.sweep = initValue(properties.sweep, this.defaults.sweep.value);
-	
+
 	    this.activateNode.gain.value = 2;
 	    this.envelopeFollower.activate(true);
 	    this.bypass = properties.bypass || false;
@@ -2793,16 +2783,16 @@
 	        }
 	    }
 	});
-	
+
 	Tuna.prototype.EnvelopeFollower = function (properties) {
 	    if (!properties) {
 	        properties = this.getDefaults();
 	    }
 	    this.input = userContext.createGain();
 	    this.jsNode = this.output = userContext.createScriptProcessor(this.buffersize, 1, 1);
-	
+
 	    this.input.connect(this.output);
-	
+
 	    this.attackTime = initValue(properties.attackTime, this.defaults.attackTime.value);
 	    this.releaseTime = initValue(properties.releaseTime, this.defaults.releaseTime.value);
 	    this._envelope = 0;
@@ -2923,7 +2913,7 @@
 	                }
 	            }
 	            rms = Math.sqrt(rms);
-	
+
 	            if (this._envelope < rms) {
 	                this._envelope *= this._attackC;
 	                this._envelope += (1 - this._attackC) * rms;
@@ -2935,12 +2925,12 @@
 	        }
 	    }
 	});
-	
+
 	Tuna.prototype.LFO = function (properties) {
 	    //Instantiate AudioNode
 	    this.output = userContext.createScriptProcessor(256, 1, 1);
 	    this.activateNode = userContext.destination;
-	
+
 	    //Set Properties
 	    this.frequency = initValue(properties.frequency, this.defaults.frequency.value);
 	    this.offset = initValue(properties.offset, this.defaults.offset.value);
@@ -3055,11 +3045,11 @@
 	        }
 	    }
 	});
-	
+
 	Tuna.toString = Tuna.prototype.toString = function () {
 	    return "Please visit https://github.com/Theodeus/tuna/wiki for instructions on how to use Tuna.js";
 	};
-	
+
 	exports.Tuna = Tuna;
 
 /***/ }
