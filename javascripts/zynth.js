@@ -12,5 +12,9 @@ $d(function(){
   });
   keyboard.setListeners();
   const controller = new Controller(keyboard);
+<<<<<<< HEAD
   window.$d = $d;
+=======
+  window.controller = controller;
+>>>>>>> a9de5f3e138ea6921dd6ce3d8458ef61d0d5d2f0
 });

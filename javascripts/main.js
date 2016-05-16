@@ -63,7 +63,11 @@
 	  });
 	  keyboard.setListeners();
 	  var controller = new _controls.Controller(keyboard);
+<<<<<<< HEAD
 	  window.$d = _domAble.$d;
+=======
+	  window.controller = controller;
+>>>>>>> a9de5f3e138ea6921dd6ce3d8458ef61d0d5d2f0
 	});
 
 /***/ },
@@ -304,7 +308,10 @@
 	      this.each(function (el) {
 	        return el.addEventListener(eventType, delegatedListener);
 	      });
+<<<<<<< HEAD
 	
+=======
+>>>>>>> a9de5f3e138ea6921dd6ce3d8458ef61d0d5d2f0
 	      return delegatedListener;
 	    }
 	  }, {
@@ -838,10 +845,17 @@
 	      });
 	
 	      this.overdrive = new tuna.Overdrive({
+<<<<<<< HEAD
 	        outputGain: 1, //0 to 1+
 	        drive: 1, //0 to 1
 	        curveAmount: 1, //0 to 1
 	        algorithmIndex: 5, //0 to 5, selects one of our drive algorithms
+=======
+	        outputGain: 0.4, //0 to 1+
+	        drive: 1, //0 to 1
+	        curveAmount: 1, //0 to 1
+	        algorithmIndex: 3, //0 to 5, selects one of our drive algorithms
+>>>>>>> a9de5f3e138ea6921dd6ce3d8458ef61d0d5d2f0
 	        bypass: 0
 	      });
 	

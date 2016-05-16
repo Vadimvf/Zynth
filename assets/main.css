@@ -10,7 +10,11 @@
 }
 
 /*RESET*/
+<<<<<<< HEAD
 body, ul, li, div, p, a {
+=======
+body, ul, li, div, p {
+>>>>>>> a9de5f3e138ea6921dd6ce3d8458ef61d0d5d2f0
   border: none;
   text-decoration: none;
   margin: 0;
