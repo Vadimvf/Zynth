@@ -98,13 +98,6 @@ class Controller {
   }
 
   connectEffects(){
-    const limiter = ctx.createDynamicsCompressor();
-    limiter.threshold.value = 0.0; // this is the pitfall, leave some headroom
-    limiter.knee.value = 0.0; // brute force
-    limiter.ratio.value = 20.0; // max compression
-    limiter.attack.value = 0.005; // 5ms attack
-    limiter.release.value = 0.050; // 50ms release
-
     let effects = [this.chorus, this.delay, this.phaser, this.tremolo,
                    this.bitcrusher, this.compressor, this.overdrive];
 
@@ -112,10 +105,8 @@ class Controller {
       let gainNode1 = note.gainNode1;
       let gainNode2 = note.gainNode2;
       effects.forEach(effect => {
-        gainNode1.connect(limiter);
-        gainNode2.connect(limiter);
-        limiter.connect(ctx.destination);
-        limiter.connect(effect);
+        gainNode1.connect(effect);
+        gainNode2.connect(ctx.destination);
       });
     });
   }
