@@ -12,6 +12,12 @@ $d(function(){
   });
   keyboard.setListeners();
   const controller = new Controller(keyboard);
-  window.$d = $d;
   window.controller = controller;
+
+  const confirm = document.getElementById('modal-confirm')
+  confirm && confirm.addEventListener("click", function() {
+    $d(document.getElementById('modal')).addClass('hide')
+    controller.setRange("2")
+  })
+  window.$d = $d;
 });

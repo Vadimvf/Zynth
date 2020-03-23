@@ -272,3 +272,54 @@ div.links a {
     margin-top: -.75rem;
   }
 }
+
+.logo-container {
+  max-width: 500px;
+  margin: auto;
+}
+
+#modal {
+  position: absolute;
+  top: 0;
+  bottom: 0em;
+  left: 0;
+  right: 0em;
+  width: 100%;
+  height: 100%;
+  background: #182233ba;
+  z-index: 999999;
+}
+
+#modal.hide {
+  display: none;
+}
+
+.modal-text {
+  margin-top: 2em;
+  font-size: calc(10px + 1.5em);
+  color: #d8d4e0;
+  position: relative;
+}
+
+#modal-confirm {
+  margin-top: 2em;
+  font-size: calc(10px + 2em);
+  background-color: #182233d9;
+  padding: 1em;
+  color: #55adb3;
+  font-family: 'adventor-regular', sans-serif;
+  cursor: pointer;
+}
+
+#modal-confirm:hover {
+  background-color: #9d3d83d9;
+  color: #17f7ac;
+  transition: all 0.25s ease;
+}
+
+.modal-content {
+  padding: 5em;
+  margin: auto;
+  position: relative;
+  height: 100%;
+}

@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -63,13 +63,19 @@
 	  });
 	  keyboard.setListeners();
 	  var controller = new _controls.Controller(keyboard);
-	  window.$d = _domAble.$d;
 	  window.controller = controller;
+	
+	  var confirm = document.getElementById('modal-confirm');
+	  confirm && confirm.addEventListener("click", function () {
+	    (0, _domAble.$d)(document.getElementById('modal')).addClass('hide');
+	    controller.setRange("2");
+	  });
+	  window.$d = _domAble.$d;
 	});
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 	
@@ -291,15 +297,13 @@
 	
 	
 	      if (targetListener.length > 1) {
-	        (function () {
-	          var target = targetListener[0];
-	          var listener = targetListener[1];
+	        var target = targetListener[0],
+	            listener = targetListener[1];
 	
 	
-	          delegatedListener = function delegatedListener(e, nodeEl) {
-	            if ($d.isMatch(e.target, target)) listener(e);
-	          };
-	        })();
+	        delegatedListener = function delegatedListener(e, nodeEl) {
+	          if ($d.isMatch(e.target, target)) listener(e);
+	        };
 	      }
 	
 	      this.each(function (el) {
@@ -334,9 +338,9 @@
 	
 	exports.$d = $d;
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -359,10 +363,10 @@
 	
 	var Keyboard = function () {
 	  function Keyboard(_ref) {
-	    var parentEl = _ref.parentEl;
-	    var docEl = _ref.docEl;
-	    var _ref$noteRange = _ref.noteRange;
-	    var noteRange = _ref$noteRange === undefined ? _constants.OCTAVE.second : _ref$noteRange;
+	    var parentEl = _ref.parentEl,
+	        docEl = _ref.docEl,
+	        _ref$noteRange = _ref.noteRange,
+	        noteRange = _ref$noteRange === undefined ? _constants.OCTAVE.second : _ref$noteRange;
 	
 	    _classCallCheck(this, Keyboard);
 	
@@ -471,9 +475,9 @@
 	
 	exports.Keyboard = Keyboard;
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
@@ -492,10 +496,10 @@
 	
 	var Note = function () {
 	  function Note(noteName, _ref) {
-	    var _ref$oscType = _ref.oscType1;
-	    var oscType1 = _ref$oscType === undefined ? "sine" : _ref$oscType;
-	    var _ref$oscType2 = _ref.oscType2;
-	    var oscType2 = _ref$oscType2 === undefined ? "sine" : _ref$oscType2;
+	    var _ref$oscType = _ref.oscType1,
+	        oscType1 = _ref$oscType === undefined ? "sine" : _ref$oscType,
+	        _ref$oscType2 = _ref.oscType2,
+	        oscType2 = _ref$oscType2 === undefined ? "sine" : _ref$oscType2;
 	
 	    _classCallCheck(this, Note);
 	
@@ -560,9 +564,9 @@
 	exports.Note = Note;
 	exports.ctx = ctx;
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 	
@@ -732,9 +736,9 @@
 	exports.TONES = TONES;
 	exports.OCTAVE = OCTAVE;
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -940,9 +944,9 @@
 	
 	exports.Controller = Controller;
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 	
@@ -1034,8 +1038,8 @@
 	    },
 	    automate: {
 	        value: function value(property, _value, duration, startTime) {
-	            var start = startTime ? ~ ~(startTime / 1000) : userContext.currentTime,
-	                dur = duration ? ~ ~(duration / 1000) : 0,
+	            var start = startTime ? ~~(startTime / 1000) : userContext.currentTime,
+	                dur = duration ? ~~(duration / 1000) : 0,
 	                _is = this.defaults[property],
 	                param = this[property],
 	                method;
@@ -3042,6 +3046,6 @@
 	
 	exports.Tuna = Tuna;
 
-/***/ }
+/***/ })
 /******/ ]);
 //# sourceMappingURL=main.js.map
